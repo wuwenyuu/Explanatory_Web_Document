@@ -34,4 +34,5 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		// Build and save initial models here.
 
 	}
+	
 }
