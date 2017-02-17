@@ -2,17 +2,30 @@ package uk.ac.man.cs.eventlite.entities;
 
 import java.util.Date;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+@Entity
+@Table(name="entities")
 public class Event {
 
+	@GeneratedValue
+	@Id
 	private long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@Temporal(TemporalType.DATE)
 	private Date date;
 
 	private String name;
-
+	
+	
 	private long venue;
 
 	public Event() {
