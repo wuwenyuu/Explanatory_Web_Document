@@ -23,4 +23,28 @@ public class EventServiceTest extends TestParent {
 
 		assertThat("findAll should get all events.", count, equalTo((long) events.size()));
 	}
+	
+	@Test 
+	public void save(){
+		
+		long count = eventService.count();
+		count++;
+		
+		Event eventtest = new Event();
+		eventtest.setId(3);
+		eventtest.setName("testevent");
+		eventtest.setVenue(1);
+		eventtest.setDate(null);
+		
+		eventService.save(eventtest);
+		
+		List<Event> events = (List<Event>) eventService.findAll();
+
+		assertEqual(count, (long) events.size());
+	}
+
+	private void assertEqual(long count, long size) {
+		// TODO Auto-generated method stub
+		
+	}
 }
