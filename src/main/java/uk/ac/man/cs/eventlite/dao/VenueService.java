@@ -5,4 +5,8 @@ import uk.ac.man.cs.eventlite.entities.Venue;
 public interface VenueService {
 
 	public Iterable<Venue> findAll();
+	
+	public long count();
+	
+	public void save(Venue venue);
 }
