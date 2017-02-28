@@ -38,6 +38,11 @@ public class EventServiceImpl implements EventService {
 	}
 	
 	@Override
+	public Iterable<Event> findAllByDateOrderByDateAsc() {
+		return eventRepository.findAllByDateOrderByDateAsc();
+	}
+	
+	@Override
 	public void save(Event event) {
 		eventRepository.save(event);
 		//<S extends T> S save(S entity);

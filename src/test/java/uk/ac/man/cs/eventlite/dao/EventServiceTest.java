@@ -10,11 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import uk.ac.man.cs.eventlite.TestParent;
 import uk.ac.man.cs.eventlite.entities.Event;
+import uk.ac.man.cs.eventlite.entities.Venue;
 
 public class EventServiceTest extends TestParent {
 
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private VenueService venueService;
 
 	@Test
 	public void findAll() {
@@ -30,10 +34,17 @@ public class EventServiceTest extends TestParent {
 		long count = eventService.count();
 		count++;
 		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(1000);
+ 		
+ 		venueService.save(venue1);
+ 		
 		Event eventtest = new Event();
 		eventtest.setId(3);
 		eventtest.setName("testevent");
-		eventtest.setVenue(1);
+		eventtest.setVenue(venue1);
 		eventtest.setDate(null);
 		
 		eventService.save(eventtest);

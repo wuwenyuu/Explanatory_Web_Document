@@ -13,11 +13,7 @@
     {{#events}}
       <tr>
         <td>{{name}}</td>
-        <td>
-          {{#venues}}
-            {{#if this.id = venue}}{{this.name}}{{/if}}
-          {{/venues}}
-        </td>
+        <td>{{venue.name}}</td>
         <td>{{date}}</td>
       </tr>
     {{/events}}

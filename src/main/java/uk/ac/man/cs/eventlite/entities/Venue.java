@@ -2,11 +2,15 @@ package uk.ac.man.cs.eventlite.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import java.util.List;
 
 @Entity
 @Table(name = "venues")
-
 public class Venue {
 
 	@Id
@@ -15,14 +19,25 @@ public class Venue {
 	private String name;
 
 	private int capacity;
-
-	public Venue() {
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "venue")
+	private List<Event> events;
+	  
+	public Venue() { 
 	}
+	
+	@JsonIgnore
+	public List<Event> getEvents() {
+	    return events;
+	}
+	
 
 	public long getId() {
 		return id;
 	}
 
+	
 	public void setId(long id) {
 		this.id = id;
 	}
