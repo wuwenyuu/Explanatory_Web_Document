@@ -10,5 +10,5 @@ public interface EventService {
 	
 	public void save(Event event);
 	
-	public Iterable<Event> findAllByDateOrderByDateAsc();
+	public Iterable<Event> findAllByOrderByDateAsc();
 }
