@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import uk.ac.man.cs.eventlite.entities.Event;
 import uk.ac.man.cs.eventlite.entities.Venue;
 
 @Service
@@ -44,18 +45,19 @@ public class VenueServiceImpl implements VenueService {
 	}
 */
 	@Override
-	public Iterable<Venue> findAll(){
+	public long count() {
+		return venueRepository.count();
+	}
+
+	@Override
+	public Iterable<Venue> findAll() {
 		return venueRepository.findAll();
 	}
 	
 	@Override
-	public long count(){
-		return venueRepository.count();
-	}
-	
-	@Override
-	public void save(Venue venue){
+	public void save(Venue venue) {
 		venueRepository.save(venue);
+		//<S extends T> S save(S entity);
 	}
 	
 }

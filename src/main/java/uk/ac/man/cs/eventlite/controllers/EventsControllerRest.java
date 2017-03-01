@@ -22,6 +22,6 @@ public class EventsControllerRest {
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HttpEntity<Iterable<Event>> getAllEvents() {
 
-		return new ResponseEntity<Iterable<Event>>(eventService.findAll(), HttpStatus.OK);
+		return new ResponseEntity<Iterable<Event>>(eventService.findAllByOrderByDateAsc(), HttpStatus.OK);
 	}
 }

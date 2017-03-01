@@ -23,8 +23,8 @@ public class EventsControllerWeb {
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
 
-		model.addAttribute("events", eventService.findAll());
-		model.addAttribute("venues", venueService.findAll());
+		model.addAttribute("events", eventService.findAllByOrderByDateAsc());
+		//model.addAttribute("venues", venueService.findAll());
 
 		return "events/index";
 	}
