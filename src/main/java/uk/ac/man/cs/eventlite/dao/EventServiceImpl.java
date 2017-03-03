@@ -47,4 +47,14 @@ public class EventServiceImpl implements EventService {
 		eventRepository.save(event);
 		//<S extends T> S save(S entity);
 	}
+	
+	@Override
+	public Event findByName(String name){
+		return eventRepository.findByName(name);
+	}
+	
+	@Override
+	public Event findOne(long id){
+		return eventRepository.findOne(id);
+	}
 }
