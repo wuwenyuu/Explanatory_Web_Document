@@ -1,0 +1,26 @@
+{{#partial "content"}}
+  <h1>Add a new Event</h1>
+
+  {{#if errors}}
+    <p class="h2 text-danger">There were errors in the submitted event!</p>
+  {{/if}}
+
+  <form action="/events/{eventname}/{eventdate}" method="post">
+        <div class="form-group {{#if errors.template}}has-error{{/if}}">
+      
+      <label for="template">Events text</label>
+     
+      name = <input class="form-control" type="text" name="eventname" id="template" placeholder="Event Name" autofocus />
+      date = <input class="form-control" type="text" name="eventdate" id="template" placeholder="YYYY/MM/DD" autofocus />
+      
+      {{#if errors.template}}
+      <p class="text-danger">{{errors.template}}</p>
+      {{/if}}
+    </div>
+
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <a class="btn btn-danger" role="button" href="/events">Cancel</a>
+  </form>
+{{/partial}}
+
+{{> layouts/base title="New Event"}}
