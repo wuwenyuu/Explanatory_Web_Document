@@ -21,6 +21,7 @@ public class EventServiceImpl implements EventService {
 	
 	@Autowired
 	private EventRepository eventRepository;
+	private EventService eventService;
 	
 	
 	private final static Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
@@ -35,6 +36,21 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Iterable<Event> findAll() {
 		return eventRepository.findAll();
+	}
+	
+	@Override
+	public Iterable<Event> findEventsByKeyWord(String name) 
+	{
+		ArrayList<Event> eventsList = new ArrayList<Event>();
+		List<Event> others = (List<Event>) eventService.findAll();
+		
+		for ( Event newEvent : others )
+		{
+			if (newEvent.findByKeyWord(name))
+			((ArrayList<Event>) eventsList).add(newEvent);
+		}
+		
+		return (Iterable<Event>) eventsList;
 	}
 	
 	@Override
