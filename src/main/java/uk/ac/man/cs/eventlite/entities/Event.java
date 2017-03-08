@@ -26,6 +26,20 @@ public class Event {
 
 	private String name;
 	
+	public boolean findByKeyWord(String key)
+	{
+		String eventName = name;
+		boolean closeEnough = false;
+
+        if (eventName.toLowerCase().contains(key.toLowerCase()))
+        {
+        	closeEnough = true;
+        }
+		return closeEnough;
+		
+	}
+	
+	
 	@ManyToOne
 	private Venue venue;
 
