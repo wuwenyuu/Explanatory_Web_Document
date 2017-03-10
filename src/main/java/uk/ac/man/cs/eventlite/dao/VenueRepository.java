@@ -6,4 +6,6 @@ import uk.ac.man.cs.eventlite.entities.Venue;
 
 public interface VenueRepository extends CrudRepository<Venue, Long> {
 
+	public Venue findOneByName(String name);
+	
 }

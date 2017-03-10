@@ -5,17 +5,18 @@
     <p class="h2 text-danger">There were errors in the submitted event!</p>
   {{/if}}
 
-  <form action="/events/{eventname}/{eventdate}" method="post">
+  <form action="/events/new/{eventname}/{eventdate}/{eventvenue}" method="post">
         <div class="form-group {{#if errors.template}}has-error{{/if}}">
       
-      <label for="template">Events text</label>
-     
-      name = <input class="form-control" type="text" name="eventname" id="template" placeholder="Event Name" autofocus />
-      date = <input class="form-control" type="text" name="eventdate" id="template" placeholder="YYYY/MM/DD" autofocus />
+      <label for="name">Event Name</label>
+      <input class="form-control" type="text" name="eventname" id="name" placeholder="Event Name" autofocus />
       
-      {{#if errors.template}}
-      <p class="text-danger">{{errors.template}}</p>
-      {{/if}}
+      <label for="date">Event Date</label>
+      <input class="form-control" type="text" name="eventdate" id="date" placeholder="YYYY/MM/DD" autofocus />
+      
+      <label for="venue">Associated Venue</label>
+      <input class="form-control" type="text" name="eventvenue" id="venue" placeholder="Venue Name" autofocus />
+      
     </div>
 
     <button class="btn btn-primary" type="submit">Submit</button>

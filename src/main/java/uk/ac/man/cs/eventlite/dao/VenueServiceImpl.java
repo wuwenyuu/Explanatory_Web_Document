@@ -60,4 +60,10 @@ public class VenueServiceImpl implements VenueService {
 		//<S extends T> S save(S entity);
 	}
 	
+	@Override
+	public Venue findOneByName(String name) {
+		return venueRepository.findOneByName(name);
+		//<S extends T> S save(S entity);
+	}
+	
 }
