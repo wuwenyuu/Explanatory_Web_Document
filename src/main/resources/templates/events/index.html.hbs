@@ -1,6 +1,14 @@
 {{#partial "content"}}
 <h1>All events</h1>
 
+<form action="/events/search" method="get" >
+<div class="input-group">
+  <input type="text" class="form-control" name="searchEvent" placeholder="Search for an event ..."/>
+  <div class="input-group-btn">
+  <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+  </div>
+  </div>
+</form>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -15,11 +23,6 @@
         <td>{{name}}</td>
         <td>{{venue.name}}</td>
         <td>{{date}}</td>
-        <td>
-          <form action="/events/{{id}}/delete" method="post">
-            <button type="submit" class="btn btn-default btn-xs">Delete</button>
-          </form>
-        </td>
       </tr>
     {{/events}}
   </tbody>

@@ -21,6 +21,7 @@ public class EventServiceImpl implements EventService {
 	
 	@Autowired
 	private EventRepository eventRepository;
+	private EventService eventService;
 	
 	
 	private final static Logger log = LoggerFactory.getLogger(EventServiceImpl.class);
@@ -40,6 +41,11 @@ public class EventServiceImpl implements EventService {
 	@Override
 	public Iterable<Event> findAllByOrderByDateAsc() {
 		return eventRepository.findAllByOrderByDateAsc();
+	}
+	
+	@Override
+	public Iterable<Event> findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(String name) {
+		return eventRepository.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name);
 	}
 	
 	@Override
