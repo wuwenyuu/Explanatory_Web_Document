@@ -1,6 +1,7 @@
 {{#partial "content"}}
 <h1>All events</h1>
 
+
 <table class="table table-striped table-hover">
   <thead>
     <tr>
@@ -15,11 +16,12 @@
         <td>{{name}}</td>
         <td>{{venue.name}}</td>
         <td>{{date}}</td>
+ 		<!---<td>{{id}}</td>-->
+        <td><a class="btn btn-primary" role="submit" href="/events/{{id}}/update">Update</a></td>
       </tr>
     {{/events}}
   </tbody>
 </table>
-
 {{/partial}}
 
 {{> layouts/base title="EventLite events"}}

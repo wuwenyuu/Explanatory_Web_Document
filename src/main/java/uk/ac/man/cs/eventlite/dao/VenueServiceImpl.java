@@ -48,7 +48,12 @@ public class VenueServiceImpl implements VenueService {
 	public long count() {
 		return venueRepository.count();
 	}
-
+	
+	@Override 
+	public Venue findById(long id){
+		return venueRepository.findById(id);
+	}
+	
 	@Override
 	public Iterable<Venue> findAll() {
 		return venueRepository.findAll();
