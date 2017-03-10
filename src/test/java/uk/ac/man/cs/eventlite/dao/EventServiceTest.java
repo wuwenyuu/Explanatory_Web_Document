@@ -1,6 +1,7 @@
 package uk.ac.man.cs.eventlite.dao;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import java.util.List;
@@ -54,10 +55,9 @@ public class EventServiceTest extends TestParent {
 		assertEqual(count, (long) events.size());
 	}
 	
-	@Test 
-	public void deleteById(){
-		
-		
+	@Test
+	public void findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc()
+	{
 		Venue venue1 = new Venue();
  		venue1.setId(1);
  		venue1.setName("Kilburn");
@@ -65,51 +65,35 @@ public class EventServiceTest extends TestParent {
  		
  		venueService.save(venue1);
  		
-		Event eventtest = new Event();
-		eventtest.setId(3);
-		eventtest.setName("testevent");
-		eventtest.setVenue(venue1);
-		eventtest.setDate(null);
+		Event eventtest1 = new Event();
+		eventtest1.setId(3);
+		eventtest1.setName("testevent");
+		eventtest1.setVenue(venue1);
+		eventtest1.setDate(null);
 		
-		eventService.save(eventtest);
+		eventService.save(eventtest1);
 		
-		long count = eventService.count();
-		count--;
+		Event eventtest2 = new Event();
+		eventtest2.setId(4);
+		eventtest2.setName("eventName");
+		eventtest2.setVenue(venue1);
+		eventtest2.setDate(null);
 		
-		eventService.delete(eventtest.getId());
+		eventService.save(eventtest2);
 		
-		List<Event> events = (List<Event>) eventService.findAll();
+		Event eventtest3 = new Event();
+		eventtest3.setId(4);
+		eventtest3.setName("this is a test");
+		eventtest3.setVenue(venue1);
+		eventtest3.setDate(null);
+		
+		eventService.save(eventtest3);
+		
+		String name = "TEST";
+		
+		List<Event> events = (List<Event>) eventService.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name);
 
-		assertEqual(count, (long) events.size());
-	}
-	
-	@Test 
-	public void deleteByObject(){
-		
-		
-		Venue venue1 = new Venue();
- 		venue1.setId(1);
- 		venue1.setName("Kilburn");
- 		venue1.setCapacity(1000);
- 		
- 		venueService.save(venue1);
- 		
-		Event eventtest = new Event();
-		eventtest.setId(3);
-		eventtest.setName("testevent");
-		eventtest.setVenue(venue1);
-		eventtest.setDate(null);
-		
-		eventService.save(eventtest);
-		
-		long count = eventService.count();
-		count--;
-		
-		eventService.delete(eventtest);
-		
-		List<Event> events = (List<Event>) eventService.findAll();
-
-		assertEqual(count, (long) events.size());
+		assertEquals("findAll should get all events.", 2, events.size());;
 	}
 
 	private void assertEqual(long count, long size) {
