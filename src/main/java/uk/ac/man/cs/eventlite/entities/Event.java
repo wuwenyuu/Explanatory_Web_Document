@@ -26,7 +26,6 @@ public class Event {
 
 	private String name;
 	
-
 	@ManyToOne
 	private Venue venue;
 
