@@ -9,4 +9,6 @@ public interface VenueService {
 	public long count();
 	
 	public void save(Venue venue);
+
+	public Venue findOne(long id);
 }
