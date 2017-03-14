@@ -37,7 +37,7 @@ public class ContentNegotiation extends WebMvcConfigurerAdapter {
 
 	@Bean
 	public ViewResolver contentNegotiatingViewResolver(ContentNegotiationManager manager) {
-
+		
 		List<ViewResolver> resolvers = new ArrayList<ViewResolver>();
 		resolvers.add(getHtmlTemplateViewResolver());
 		resolvers.add(getJsonTemplateViewResolver());

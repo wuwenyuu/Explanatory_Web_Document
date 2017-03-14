@@ -47,6 +47,10 @@ public class Event {
 	public void setDate(Date date) {
 		this.date = date;
 	}
+	
+	public boolean hasPassed() {
+		return date.compareTo(new Date()) < 0;
+	}
 
 	public String getName() {
 		return name;
