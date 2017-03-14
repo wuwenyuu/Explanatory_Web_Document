@@ -78,5 +78,13 @@ public class EventsControllerWeb {
  	    return "redirect:/events";
  	    // Actual exception handling
  	}
+ 	
+ 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, produces = { MediaType.TEXT_HTML_VALUE })
+	public String deleteEvent(@PathVariable("id") long id) {
+
+		eventService.delete(id);
+
+		return "redirect:/events";
+	}
 	
 }

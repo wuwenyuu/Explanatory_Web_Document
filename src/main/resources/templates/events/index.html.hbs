@@ -25,6 +25,11 @@
         <td>{{date}}</td>
  		<!---<td>{{id}}</td>-->
         <td><a class="btn btn-primary" role="submit" href="/events/{{id}}/update">Update</a></td>
+        <td>
+           <form action="/events/{{id}}/delete" method="post">
+             <button type="submit" class="btn btn-default btn-xs">Delete</button>
+           </form>
+        </td>
       </tr>
     {{/events}}
   </tbody>

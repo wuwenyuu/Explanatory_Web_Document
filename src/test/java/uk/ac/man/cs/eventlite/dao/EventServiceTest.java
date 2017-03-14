@@ -95,6 +95,65 @@ public class EventServiceTest extends TestParent {
 
 		assertEquals("findAll should get all events.", 2, events.size());;
 	}
+	
+	@Test 
+ 	public void deleteById(){
+ 		
+ 		
+ 		Venue venue1 = new Venue();
+  		venue1.setId(1);
+  		venue1.setName("Kilburn");
+  		venue1.setCapacity(1000);
+  		
+  		venueService.save(venue1);
+  		
+ 		Event eventtest = new Event();
+ 		eventtest.setId(3);
+ 		eventtest.setName("testevent");
+ 		eventtest.setVenue(venue1);
+ 		eventtest.setDate(null);
+ 		
+ 		eventService.save(eventtest);
+ 		
+ 		long count = eventService.count();
+ 		count--;
+ 		
+ 		eventService.delete(eventtest.getId());
+ 		
+ 		List<Event> events = (List<Event>) eventService.findAll();
+ 
+ 		assertEqual(count, (long) events.size());
+ 	}
+ 	
+ 	@Test 
+ 	public void deleteByObject(){
+ 		
+ 		
+ 		Venue venue1 = new Venue();
+  		venue1.setId(1);
+  		venue1.setName("Kilburn");
+  		venue1.setCapacity(1000);
+  		
+  		venueService.save(venue1);
+  		
+ 		Event eventtest = new Event();
+ 		eventtest.setId(3);
+ 		eventtest.setName("testevent");
+ 		eventtest.setVenue(venue1);
+ 		eventtest.setDate(null);
+ 		
+ 		eventService.save(eventtest);
+ 		
+ 		long count = eventService.count();
+ 		count--;
+ 		
+ 		eventService.delete(eventtest);
+ 		
+ 		List<Event> events = (List<Event>) eventService.findAll();
+ 
+	
+ 		assertEqual(count, (long) events.size());
+ 	}
 
 	private void assertEqual(long count, long size) {
 		// TODO Auto-generated method stub

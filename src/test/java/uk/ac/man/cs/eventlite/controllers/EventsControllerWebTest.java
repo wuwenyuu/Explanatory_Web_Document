@@ -2,6 +2,7 @@ package uk.ac.man.cs.eventlite.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Test;
@@ -80,4 +81,12 @@ public class EventsControllerWebTest extends TestParent {
 		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("events/index"));
 	}
+ 	
+ 	@Test
+ 	public void testDeleteEvent() throws Exception {
+ 		mvc.perform(MockMvcRequestBuilders.post("/events/1/delete").accept(MediaType.TEXT_HTML))
+ 				.andExpect(status().isFound()).andExpect(content().string(""))
+ 				.andExpect(view().name("redirect:/events"));
+ 	}
+ 
 }
