@@ -23,11 +23,12 @@
         <td>{{name}}</td>
         <td>{{venue.name}}</td>
         <td>{{date}}</td>
+ 		<!---<td>{{id}}</td>-->
+        <td><a class="btn btn-primary" role="submit" href="/events/{{id}}/update">Update</a></td>
       </tr>
     {{/events}}
   </tbody>
 </table>
-
 {{/partial}}
 
 {{> layouts/base title="EventLite events"}}

@@ -11,4 +11,7 @@ public interface EventRepository extends CrudRepository<Event, Long> {
 	public Iterable<Event> findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(String name);
 	
 	
+	
+	public Event findById(long id);
+
 }

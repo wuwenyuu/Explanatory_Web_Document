@@ -17,4 +17,6 @@ public interface EventService {
 	public Iterable<Event> findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(String name);
 	
 	public Iterable<Event> findAllByOrderByDateAsc();
+	
+	public Event findById(long id);
 }
