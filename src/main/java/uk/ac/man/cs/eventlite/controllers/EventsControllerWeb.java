@@ -1,6 +1,7 @@
 package uk.ac.man.cs.eventlite.controllers;
 
 import java.util.Date;
+import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
 import uk.ac.man.cs.eventlite.entities.Event;
-import uk.ac.man.cs.eventlite.entities.Venue;
 
 @Controller
 @RequestMapping("/events")
@@ -32,9 +32,18 @@ public class EventsControllerWeb {
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
 
-		model.addAttribute("events", eventService.findAllByOrderByDateAsc());
-		//model.addAttribute("venues", venueService.findAll());
-
+		LinkedList<Event> futureEvents = new LinkedList<Event>();
+		LinkedList<Event> pastEvents = new LinkedList<Event>();
+		
+		for (Event event : eventService.findAllByOrderByDateAsc()) {
+			if (event.hasPassed())
+				pastEvents.add(event);
+			else
+				futureEvents.add(event);
+		}
+		
+		model.addAttribute("pastEvents", pastEvents);
+		model.addAttribute("futureEvents", futureEvents);
 		return "events/index";
 	}
 	
