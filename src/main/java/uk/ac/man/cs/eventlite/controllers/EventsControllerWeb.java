@@ -95,5 +95,15 @@ public class EventsControllerWeb {
 
 		return "redirect:/events";
 	}
+ 	
+ 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String detailedEvent(@PathVariable("id") long id, Model model) {
+
+		try{
+			model.addAttribute("event",eventService.findById(id));
+		}catch(Exception ex){}
+
+		return "events/detail";
+	}
 	
 }

@@ -21,7 +21,7 @@
   <tbody>
     {{#futureEvents}}
     <tr>
-      <td>{{name}}</td>
+      <td><a href="/events/{{id}}?name={{name}}">{{name}}</a></td>
       <td>{{venue.name}}</td>
       <td>{{date}}</td>
       <!---<td>{{id}}</td>-->
@@ -47,7 +47,7 @@
   <tbody>
     {{#pastEvents}}
     <tr>
-      <td>{{name}}</td>
+      <td><a href="/events/{{id}}?name={{name}}">{{name}}</a></td>
       <td>{{venue.name}}</td>
       <td>{{date}}</td>
       <!---<td>{{id}}</td>-->

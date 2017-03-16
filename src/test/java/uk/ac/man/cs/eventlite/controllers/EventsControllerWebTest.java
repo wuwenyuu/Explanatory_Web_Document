@@ -1,5 +1,6 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import static org.hamcrest.core.StringContains.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -88,5 +89,40 @@ public class EventsControllerWebTest extends TestParent {
  				.andExpect(status().isFound()).andExpect(content().string(""))
  				.andExpect(view().name("redirect:/events"));
  	}
+ 	
+	@Test
+	public void testViewEventId() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/3?name=Third Event").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Id")))
+		.andExpect(view().name("events/detail"));
+	}
+	
+	@Test
+	public void testViewEventDescription() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/3?name=Third Event").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("This is third event")))
+		.andExpect(view().name("events/detail"));
+	}
+	
+	@Test
+	public void testViewEventName() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/3?name=Third Event").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Third Event")))
+		.andExpect(view().name("events/detail"));
+	}
+	
+	@Test
+	public void testViewEventDate() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/3?name=Third Event").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("2013-01-09")))
+		.andExpect(view().name("events/detail"));
+	}
+	
+	@Test
+	public void testViewEventVenue() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/3?name=Third Event").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Alan Gilbert")))
+		.andExpect(view().name("events/detail"));
+	}
  
 }
