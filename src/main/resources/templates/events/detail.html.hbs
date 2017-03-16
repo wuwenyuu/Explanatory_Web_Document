@@ -26,9 +26,18 @@
       <th>Description</th>
       <th>{{event.description}}</th>
     </tr>
-
+    
+    <tr>
+    	<th>
+    	<a class="btn btn-primary" role="button" href="/events">Back</a> 
+    	</th>
+    	<th>
+    		<form action="/events/{{id}}/delete" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
+    	</th>
+    </tr>
+    
 </table>
-  <a class="btn btn-primary" role="button" href="/events">Back</a>
+  
 {{/partial}}
 
 {{> layouts/base title="Detailed Information"}}
