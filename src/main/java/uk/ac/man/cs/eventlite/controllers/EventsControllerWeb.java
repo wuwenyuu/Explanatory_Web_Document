@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
 import uk.ac.man.cs.eventlite.entities.Event;
-import uk.ac.man.cs.eventlite.entities.Venue;
 
 @Controller
 @RequestMapping("/events")
