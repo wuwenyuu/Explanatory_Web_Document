@@ -56,8 +56,19 @@ public class EventsControllerWeb {
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) {
-
-		model.addAttribute("events", eventService.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name));
+		
+		LinkedList<Event> futureEvents = new LinkedList<Event>();
+		LinkedList<Event> pastEvents = new LinkedList<Event>();
+		
+		for (Event event : eventService.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name)) {
+			if (event.hasPassed())
+				pastEvents.add(event);
+			else
+				futureEvents.add(event);
+		}
+		
+		model.addAttribute("pastEvents", pastEvents);
+		model.addAttribute("futureEvents", futureEvents);
 
 		return "events/index";
 	}
