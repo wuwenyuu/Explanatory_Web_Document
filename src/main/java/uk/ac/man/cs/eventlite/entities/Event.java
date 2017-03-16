@@ -10,6 +10,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -21,8 +23,14 @@ public class Event {
 	private long id;
 
 	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	@Temporal(TemporalType.DATE)
 	private Date date;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
+	@DateTimeFormat(pattern = "HH:mm")
+	@Temporal(TemporalType.TIME)
+	private Date time;
 
 	private String name;
 	private String description;
@@ -43,9 +51,17 @@ public class Event {
 	public Date getDate() {
 		return date;
 	}
+	
+	public Date getTime() {
+		return time;
+	}
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+	
+	public void setTime(Date time) {
+		this.time = time;
 	}
 	
 	public boolean hasPassed() {

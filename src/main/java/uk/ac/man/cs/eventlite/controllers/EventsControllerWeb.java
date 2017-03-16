@@ -42,7 +42,7 @@ public class EventsControllerWeb {
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
 		
-		for (Event event : eventService.findAllByOrderByDateAsc()) {
+		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
 			if (event.hasPassed())
 				pastEvents.add(event);
 			else
@@ -60,7 +60,7 @@ public class EventsControllerWeb {
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
 		
-		for (Event event : eventService.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name)) {
+		for (Event event : eventService.findAllByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name)) {
 			if (event.hasPassed())
 				pastEvents.add(event);
 			else

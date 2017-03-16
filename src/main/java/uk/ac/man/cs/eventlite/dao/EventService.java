@@ -14,9 +14,13 @@ public interface EventService {
 	
 	public void delete(long id);
 	
-	public Iterable<Event> findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(String name);
+	public Iterable<Event> findAllByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(String name);
 	
 	public Iterable<Event> findAllByOrderByDateAsc();
+	
+	public Iterable<Event> findAllByOrderByDateAscNameAsc();
+	
+	public Iterable<Event> findAllByOrderByDateAscTimeAscNameAsc();
 	
 	public Event findById(long id);
 }
