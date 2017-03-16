@@ -31,7 +31,7 @@ public class EventsControllerRest {
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HttpEntity<Iterable<Event>> searchAnEvents(@RequestParam(value="searchEvent", required=false) String name) {
 
-		return new ResponseEntity<Iterable<Event>>(eventService.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name), HttpStatus.OK);
+		return new ResponseEntity<Iterable<Event>>(eventService.findAllByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name), HttpStatus.OK);
 	}
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public @ResponseBody ResponseEntity<?> deleteEvent(@PathVariable("id") long id) {

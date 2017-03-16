@@ -91,7 +91,7 @@ public class EventServiceTest extends TestParent {
 		
 		String name = "TEST";
 		
-		List<Event> events = (List<Event>) eventService.findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc(name);
+		List<Event> events = (List<Event>) eventService.findAllByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name);
 
 		assertEquals("findAll should get all events.", 2, events.size());;
 	}

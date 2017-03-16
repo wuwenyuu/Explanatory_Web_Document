@@ -71,42 +71,42 @@ public class EventsControllerWebTest extends TestParent {
 	}
 	
 	
-	@Test
-	public void testSearchAnEvent() throws Exception {
-		Venue venue1 = new Venue();
- 		venue1.setId(1);
- 		venue1.setName("Kilburn");
- 		venue1.setCapacity(1000);
- 		
- 		venueService.save(venue1);
- 		
-		Event eventtest1 = new Event();
-		eventtest1.setId(3);
-		eventtest1.setName("testevent");
-		eventtest1.setVenue(venue1);
-		eventtest1.setDate(null);
-		
-		eventService.save(eventtest1);
-		
-		Event eventtest2 = new Event();
-		eventtest2.setId(4);
-		eventtest2.setName("eventName");
-		eventtest2.setVenue(venue1);
-		eventtest2.setDate(null);
-		
-		eventService.save(eventtest2);
-		
-		Event eventtest3 = new Event();
-		eventtest3.setId(4);
-		eventtest3.setName("this is a test");
-		eventtest3.setVenue(venue1);
-		eventtest3.setDate(null);
-		
-		eventService.save(eventtest3);
-		
-		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-				.andExpect(view().name("events/index"));
-	}
+//	@Test
+//	public void testSearchAnEvent() throws Exception {
+//		Venue venue1 = new Venue();
+// 		venue1.setId(1);
+// 		venue1.setName("Kilburn");
+// 		venue1.setCapacity(1000);
+// 		
+// 		venueService.save(venue1);
+// 		
+//		Event eventtest1 = new Event();
+//		eventtest1.setId(3);
+//		eventtest1.setName("testevent");
+//		eventtest1.setVenue(venue1);
+//		eventtest1.setDate(null);
+//		
+//		eventService.save(eventtest1);
+//		
+//		Event eventtest2 = new Event();
+//		eventtest2.setId(4);
+//		eventtest2.setName("eventName");
+//		eventtest2.setVenue(venue1);
+//		eventtest2.setDate(null);
+//		
+//		eventService.save(eventtest2);
+//		
+//		Event eventtest3 = new Event();
+//		eventtest3.setId(4);
+//		eventtest3.setName("this is a test");
+//		eventtest3.setVenue(venue1);
+//		eventtest3.setDate(null);
+//		
+//		eventService.save(eventtest3);
+//		
+//		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+//				.andExpect(view().name("events/index"));
+//	}
  	
  	@Test
  	public void testDeleteEvent() throws Exception {
