@@ -10,6 +10,12 @@ public interface VenueService {
 	public long count();
 	
 	public void save(Venue venue);
+<<<<<<< HEAD
 
 	public Venue findById(long id);
+=======
+	
+	public Venue findOneByName(String name);
+
+>>>>>>> refs/remotes/origin/week4AddEvent
 }

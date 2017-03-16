@@ -40,6 +40,31 @@ public class EventsControllerWebTest extends TestParent {
 	}
 	
 	@Test
+	public void getNewEventHtml() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/new").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+		.andExpect(view().name("events/new"));
+	}
+	
+    @Test
+	public void addEventHtml() throws Exception {
+ 
+    	long countBefore = eventService.count();
+		String name = "testevent";
+		String date = "2020/01/01";
+		String venue = "Stopford";
+		String URL = "/events/new/";
+		mvc.perform(MockMvcRequestBuilders.post(URL,name,date,venue).accept(MediaType.TEXT_HTML));
+		long countAfter = eventService.count();
+		assertEqual(countAfter, countBefore+1);
+	}
+    
+    private void assertEqual(long count, long size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	@Test
 	public void testUpdate() throws Exception{
 		mvc.perform(get("/events/34/update").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andExpect(view().name("events/update"));
 		

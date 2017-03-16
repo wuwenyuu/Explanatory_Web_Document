@@ -2,6 +2,7 @@ package uk.ac.man.cs.eventlite.dao;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -42,9 +43,29 @@ public class VenueServiceTest extends TestParent {
  		assertEqual(count, (long) venues.size());
  	}
  	
+	
+	@Test
+	public void findOneByName() {
+		String name = "venueTest";
+		Venue venuetest = new Venue();
+	    venuetest.setId(1);
+	 	venuetest.setName(name);
+	 	venuetest.setCapacity(100);
+	 	venueService.save(venuetest);
+	 	
+		Venue findvenue = venueService.findOneByName(name);
+
+		assertEqual(findvenue.getName(), name);
+	}
+ 	
  	private void assertEqual(long count, long size) {
  		// TODO Auto-generated method stub
  		
  	}
-	
+ 	
+ 	private void assertEqual(String string, String name) {
+ 		// TODO Auto-generated method stub
+ 		
+ 	}
+
 }
