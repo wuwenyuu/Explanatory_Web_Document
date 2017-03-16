@@ -70,22 +70,22 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		event1.setDate(date1);
 		event1.setName("Concert");
 		event1.setVenue(venue1);
+		event1.setDescription("This is Concert");
 		eventService.save(event1);
-		
 		Event event2 = new Event();
 		event2.setId(5);
 		event2.setDate(date2);
 		event2.setName("Another Event");
 		event2.setVenue(venue2);
+		event2.setDescription("This is another event");
 		eventService.save(event2);
-		
 		Event event3 = new Event();
 		event3.setId(6);
-		event3.setDate(date2);
+		event3.setDate(date3);
 		event3.setName("Third Event");
 		event3.setVenue(venue3);
-		eventService.save(event3);
-				
+		event3.setDescription("This is third event");
+		eventService.save(event3);	
 
 	}
 	
