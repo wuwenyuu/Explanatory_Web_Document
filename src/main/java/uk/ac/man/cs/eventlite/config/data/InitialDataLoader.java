@@ -1,5 +1,6 @@
 package uk.ac.man.cs.eventlite.config.data;
 
+import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -37,14 +38,18 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		}
         
 		Calendar cal = Calendar.getInstance();
-		cal.set(2013, Calendar.JANUARY, 11); //Year, month and day of month
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
 		Date date1 = cal.getTime();
 		
-		cal.set(2013, Calendar.JANUARY, 10); //Year, month and day of month
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
 		Date date2 = cal.getTime();
 		
 		cal.set(2013, Calendar.JANUARY, 9); //Year, month and day of month
 		Date date3 = cal.getTime();
+		
+		Date time1 = Time.valueOf("13:00:00");
+		Date time2 = Time.valueOf("12:00:00");
+		Date time3 = Time.valueOf("15:00:00");
 		
 		Venue venue1 = new Venue();
  		venue1.setId(4);
@@ -68,20 +73,25 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 		Event event1 = new Event();
 		event1.setId(4);
 		event1.setDate(date1);
+		event1.setTime(time1);
 		event1.setName("Concert Event");
 		event1.setVenue(venue1);
 		event1.setDescription("This is Concert");
 		eventService.save(event1);
+		
 		Event event2 = new Event();
 		event2.setId(5);
 		event2.setDate(date2);
-		event2.setName("Another Event");
+		event2.setTime(time2);
+		event2.setName("Gnother Event");
 		event2.setVenue(venue2);
 		event2.setDescription("This is another event");
 		eventService.save(event2);
+		
 		Event event3 = new Event();
 		event3.setId(6);
 		event3.setDate(date3);
+		event3.setTime(time3);
 		event3.setName("Third Event");
 		event3.setVenue(venue3);
 		event3.setDescription("This is third event");
