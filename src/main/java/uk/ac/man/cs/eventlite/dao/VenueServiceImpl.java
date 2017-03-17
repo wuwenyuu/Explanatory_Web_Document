@@ -25,25 +25,7 @@ public class VenueServiceImpl implements VenueService {
 	private final static Logger log = LoggerFactory.getLogger(VenueServiceImpl.class);
 
 	private final static String DATA = "data/venues.json";
-/*
-	@Override
-	public Iterable<Venue> findAll() {
-		Iterable<Venue> venues;
 
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-			InputStream in = new ClassPathResource(DATA).getInputStream();
-
-			venues = mapper.readValue(in, mapper.getTypeFactory().constructCollectionType(List.class, Venue.class));
-		} catch (Exception e) {
-			// If we can't read the file, then the event list is empty...
-			log.error("Exception while reading file '" + DATA + "': " + e);
-			venues = Collections.emptyList();
-		}
-
-		return venues;
-	}
-*/
 	@Override
 	public long count() {
 		return venueRepository.count();
@@ -71,4 +53,8 @@ public class VenueServiceImpl implements VenueService {
 		//<S extends T> S save(S entity);
 	}
 	
+	@Override
+	public Iterable<Venue> findAllByOrderByNameAsc() {
+		return venueRepository.findAllByOrderByNameAsc();
+	}
 }

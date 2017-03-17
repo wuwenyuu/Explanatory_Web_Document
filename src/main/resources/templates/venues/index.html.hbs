@@ -1,0 +1,37 @@
+{{#partial "content"}}
+<h1>All venues</h1>
+<form action="/venues/search" method="get" >
+<div class="input-group">
+  <input type="text" class="form-control" name="searchVenue" placeholder="Search for a venue ..."/>
+  <div class="input-group-btn">
+  <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+  </div>
+  </div>
+</form>
+<h2>Venues</h2>
+<table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th><i class="fa fa-tag"></i> Name</th>
+      <th><i class="fa fa-map-marker"></i> Address</th>
+      <th><i class="fa fa-hashtag"></i> Capacity</th>
+      <th><i class="fa fa-pencil"></i> Update</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#venues}}
+    <tr>
+      <td><a href="/venues/{{id}}">{{name}}</a></td>
+      <td>{{address}}</td>
+      <td>{{capacity}}</td>
+      <td><a class="btn btn-primary" role="submit" href="/venues/{{id}}/update">Update</a></td>
+    </tr>
+    {{/venues}}
+  </tbody>
+</table>
+<p>
+  <a class="btn btn-primary" role="button" href="/venues/new">Add a new venue</a>
+</p>
+{{/partial}}
+
+{{> layouts/base title="EventLite Venues"}}
