@@ -3,6 +3,7 @@ package uk.ac.man.cs.eventlite.dao;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -93,7 +94,15 @@ public class EventServiceTest extends TestParent {
 		
 		List<Event> events = (List<Event>) eventService.findAllByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name);
 
-		assertEquals("findAll should get all events.", 2, events.size());;
+		assertEquals("findAll should get all events.", 2, events.size());
+		
+		Event e1, e2;
+		e1 = events.get(0);
+		e2 = events.get(1);
+		
+		assertTrue("v1 shoule be less than v2 in lexycographic order", e1.getName().compareTo(e2.getName()) < 0);
+		
+		// DATE AND TIME ORDERING SHOULD BE TESTED TOO!!!!!!
 	}
 	
 	@Test 
