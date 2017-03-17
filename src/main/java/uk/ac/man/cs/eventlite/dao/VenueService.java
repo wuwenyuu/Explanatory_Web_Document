@@ -11,6 +11,7 @@ public interface VenueService {
 	
 	public void save(Venue venue);
 
+	public Venue findById(long id);
 	
 	public Venue findOneByName(String name);
 
