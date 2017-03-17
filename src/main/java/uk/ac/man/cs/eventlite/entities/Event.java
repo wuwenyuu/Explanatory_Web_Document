@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="events")
@@ -34,6 +35,7 @@ public class Event {
 
 	private String name;
 	private String description;
+	
 	@ManyToOne
 	private Venue venue;
 

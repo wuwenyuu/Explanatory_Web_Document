@@ -57,4 +57,9 @@ public class VenueServiceImpl implements VenueService {
 	public Iterable<Venue> findAllByOrderByNameAsc() {
 		return venueRepository.findAllByOrderByNameAsc();
 	}
+	
+	public Iterable<Venue> findAllByNameContainingIgnoreCaseOrderByNameAsc(String name)
+	{
+		return venueRepository.findAllByNameContainingIgnoreCaseOrderByNameAsc(name);
+	}
 }
