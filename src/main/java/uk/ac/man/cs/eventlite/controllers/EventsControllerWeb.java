@@ -136,12 +136,6 @@ public class EventsControllerWeb {
 		return "redirect:/events/";
 	}
 	
-	@ExceptionHandler(ConversionFailedException.class)
-	public String missingParameterHandler(Exception exception) {
-
-	    return "redirect:/events/new/";
-	    // Actual exception handling
-	}
 	
  	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String detailedEvent(@PathVariable("id") long id, Model model) {
