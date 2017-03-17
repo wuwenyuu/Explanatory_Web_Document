@@ -85,6 +85,7 @@ public class EventsControllerWebTest extends TestParent {
 //		eventtest1.setName("testevent");
 //		eventtest1.setVenue(venue1);
 //		eventtest1.setDate(null);
+//		eventtest1.setTime(null);
 //		
 //		eventService.save(eventtest1);
 //		
@@ -93,6 +94,7 @@ public class EventsControllerWebTest extends TestParent {
 //		eventtest2.setName("eventName");
 //		eventtest2.setVenue(venue1);
 //		eventtest2.setDate(null);
+//		eventtest2.setTime(null);
 //		
 //		eventService.save(eventtest2);
 //		
@@ -101,6 +103,8 @@ public class EventsControllerWebTest extends TestParent {
 //		eventtest3.setName("this is a test");
 //		eventtest3.setVenue(venue1);
 //		eventtest3.setDate(null);
+//		eventtest3.setTime(null);
+//		
 //		
 //		eventService.save(eventtest3);
 //		
