@@ -89,6 +89,8 @@ public class EventsControllerWeb {
 			@RequestParam(value = "name", defaultValue = "0") String name,
 			@RequestParam(value = "venueid", defaultValue = "0") long venueid, 
 			@RequestParam (value="date")@DateTimeFormat(pattern="yyyy-MM-dd") Date date, 
+			@RequestParam (value="description", defaultValue="empty") String description,
+			@RequestParam (value="time")@DateTimeFormat(pattern="HH:mm:SS") Date time,
 			Model model) {
 		
 		Event event = eventService.findById(id);
@@ -96,10 +98,15 @@ public class EventsControllerWeb {
 		event.setName(name);
 		event.setVenue(venueService.findById(venueid));
 		event.setDate(date);
+		event.setDescription(description);
+		event.setTime(time);
 		eventService.save(event);
 
 		return "redirect:/events/";
 	}
+	
+	
+	
 
  	@ExceptionHandler(ConversionFailedException.class)
  	public String missingParameterHandler(Exception exception) {
