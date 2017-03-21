@@ -18,7 +18,7 @@ public class Venue {
 
 	private String name;
 	
-	private String address;
+//	private String address;
 
 	private String address;
 
@@ -50,17 +50,17 @@ public class Venue {
 		return name;
 	}
 	
-	public String getAddress() {
-		return address;
-	}
+//	public String getAddress() {
+//		return address;
+//	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 	
-	public void setAddress(String address) {
-		this.address = address;
-	}
+//	public void setAddress(String address) {
+//		this.address = address;
+//	}
 
 	public String getAddress() {
 		return address;
