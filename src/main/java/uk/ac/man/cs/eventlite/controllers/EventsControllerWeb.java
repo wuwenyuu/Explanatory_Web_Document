@@ -1,7 +1,9 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import java.sql.Time;
 import java.util.Date;
 import java.util.LinkedList;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,19 +120,34 @@ public class EventsControllerWeb {
 		return "events/new";
 	}
 	
-	@RequestMapping(value = "/new/{eventname}/{eventdate}/{eventvenue}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+	@RequestMapping(value = "/new/{eventname}/{eventdate}/{eventvenue}/{eventtime}/{eventdescription}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
-	public String createEventFromForm(@PathVariable("eventname") String eventname, @PathVariable("eventdate") String eventdate,@PathVariable("eventvenue") String eventvenue,
+	public String createEventFromForm(@PathVariable("eventname") String eventname, 
+			@PathVariable("eventdate") String eventdate,
+			@PathVariable("eventvenue") String eventvenue,
+			@PathVariable("eventvenue") String eventtime,
+			@PathVariable("eventdescription") String eventdescription,
 			@RequestParam(value = "eventname", defaultValue = "Empty") String name, 
 			@RequestParam(value = "eventdate", defaultValue = "Empty") Date edate,
 			@RequestParam(value = "eventvenue", defaultValue = "Empty") String vname,
+			@RequestParam(value = "eventtime", defaultValue = "Empty") String etime,
+			@RequestParam(value = "eventdescription", defaultValue = "Empty") String description,
 			Model model) {
 		
 		Event event = new Event();
 		event.setName(name);
 		event.setDate(edate);
 		event.setVenue(venueService.findOneByName(vname));
+		event.setDescription(description);
 		
+		if (etime.matches("^(1?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"))
+		{	
+			Date time = new Date();
+		    time = Time.valueOf(etime); 
+		    event.setTime(time);
+		}
+		if (event.hasPassed())
+			return "redirect:/events/new";	
 		eventService.save(event);
 
 		return "redirect:/events/";
