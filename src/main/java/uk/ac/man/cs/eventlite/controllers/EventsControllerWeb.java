@@ -90,6 +90,8 @@ public class EventsControllerWeb {
 			@RequestParam(value = "name", defaultValue = "0") String name,
 			@RequestParam(value = "venueid", defaultValue = "0") long venueid, 
 			@RequestParam (value="date")@DateTimeFormat(pattern="yyyy-MM-dd") Date date, 
+			@RequestParam (value="description", defaultValue="empty") String description,
+			@RequestParam (value="time")@DateTimeFormat(pattern="HH:mm:SS") Date time,
 			Model model) {
 		
 		Event event = eventService.findById(id);
@@ -97,10 +99,15 @@ public class EventsControllerWeb {
 		event.setName(name);
 		event.setVenue(venueService.findById(venueid));
 		event.setDate(date);
+		event.setDescription(description);
+		event.setTime(time);
 		eventService.save(event);
 
 		return "redirect:/events/";
 	}
+	
+	
+	
 
  	@ExceptionHandler(ConversionFailedException.class)
  	public String missingParameterHandler(Exception exception) {
@@ -121,19 +128,34 @@ public class EventsControllerWeb {
 		return "events/new";
 	}
 	
-	@RequestMapping(value = "/new/{eventname}/{eventdate}/{eventvenue}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+	@RequestMapping(value = "/new/{eventname}/{eventdate}/{eventvenue}/{eventtime}/{eventdescription}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
-	public String createEventFromForm(@PathVariable("eventname") String eventname, @PathVariable("eventdate") String eventdate,@PathVariable("eventvenue") String eventvenue,
+	public String createEventFromForm(@PathVariable("eventname") String eventname, 
+			@PathVariable("eventdate") String eventdate,
+			@PathVariable("eventvenue") String eventvenue,
+			@PathVariable("eventvenue") String eventtime,
+			@PathVariable("eventdescription") String eventdescription,
 			@RequestParam(value = "eventname", defaultValue = "Empty") String name, 
 			@RequestParam(value = "eventdate", defaultValue = "Empty") Date edate,
 			@RequestParam(value = "eventvenue", defaultValue = "Empty") String vname,
+			@RequestParam(value = "eventtime", defaultValue = "Empty") String etime,
+			@RequestParam(value = "eventdescription", defaultValue = "Empty") String description,
 			Model model) {
 		
 		Event event = new Event();
 		event.setName(name);
 		event.setDate(edate);
 		event.setVenue(venueService.findOneByName(vname));
+		event.setDescription(description);
 		
+		if (etime.matches("^(1?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$"))
+		{	
+			Date time = new Date();
+		    time = Time.valueOf(etime); 
+		    event.setTime(time);
+		}
+		if (event.hasPassed())
+			return "redirect:/events/new";	
 		eventService.save(event);
 
 		return "redirect:/events/";
