@@ -16,8 +16,6 @@ import java.util.List;
 @Table(name = "venues")
 public class Venue {
 	
-
-
 	@Id
 	private long id;
 
