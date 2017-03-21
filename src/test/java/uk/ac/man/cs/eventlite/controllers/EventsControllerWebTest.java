@@ -168,6 +168,27 @@ public class EventsControllerWebTest extends TestParent {
 	}
 	
 	@Test
+	public void testViewVenueName() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Stopford")))
+		.andExpect(view().name("events/venues"));
+	}
+	
+	@Test
+	public void testViewVenueCapacity() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("500")))
+		.andExpect(view().name("events/venues"));
+	}
+	
+	@Test
+	public void testViewVenueAddress() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("S5 9NP")))
+		.andExpect(view().name("events/venues"));
+	}
+	
+	@Test
 	public void testUpcomingEvents() throws Exception {
 		when(venue.getEvents()).thenReturn(Collections.<Event> emptyList());
 		when(venueService.findById(5)).thenReturn(venue);
@@ -175,15 +196,4 @@ public class EventsControllerWebTest extends TestParent {
 		.andExpect(status().isOk()).andExpect(content().string(containsString("Gnother Event")))
 		.andExpect(view().name("events/venues"));
 	}
-//	
-//	@Test
-//	public void testNoUpcomingEvents() throws Exception {
-//		when(venue.getEvents()).thenReturn(Collections.<Event> emptyList());
-//		when(venueService.findById(6)).thenReturn(venue);
-//		mvc.perform(MockMvcRequestBuilders.get("/events/venue/6").accept(MediaType.TEXT_HTML))
-//		.andExpect(status().isOk()).andExpect(content().string(containsString("Third Event")))
-//		.andExpect(view().name("events/venues"));
-//	}
-
- 
 }
