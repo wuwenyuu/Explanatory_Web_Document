@@ -17,13 +17,14 @@
       <th><i class="fa fa-map-marker"></i> Venue</th>
       <th><i class="fa fa-calendar"></i> Date</th>
       <th><i class="fa fa-clock-o"></i> Time</th>
+      <th><i class="fa fa-pencil"></i> Update</th>
     </tr>
   </thead>
   <tbody>
     {{#futureEvents}}
     <tr>
       <td><a href="/events/{{id}}?name={{name}}">{{name}}</a></td>
-      <td>{{venue.name}}</td>
+      <td><a href="/events/venue/{{venue.id}}">{{venue.name}}</a></td>
       <td>{{date}}</td>
       <td>{{time}}</td>
       <!---<td>{{id}}</td>-->
@@ -40,13 +41,14 @@
       <th><i class="fa fa-map-marker"></i> Venue</th>
       <th><i class="fa fa-calendar"></i> Date</th>
       <th><i class="fa fa-clock-o"></i> Time</th>
+      <th><i class="fa fa-pencil"></i> Update</th>
     </tr>
   </thead>
   <tbody>
     {{#pastEvents}}
     <tr>
       <td><a href="/events/{{id}}?name={{name}}">{{name}}</a></td>
-      <td>{{venue.name}}</td>
+      <td><a href="/events/venue/{{venue.id}}">{{venue.name}}</a></td>
       <td>{{date}}</td>
       <td>{{time}}</td>
       <!---<td>{{id}}</td>-->

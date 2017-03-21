@@ -15,5 +15,8 @@ public interface VenueService {
 	
 	public Venue findOneByName(String name);
 
+	public Iterable<Venue> findAllByOrderByNameAsc();
+	
+	public Iterable<Venue> findAllByNameContainingIgnoreCaseOrderByNameAsc(String name);
 
 }
