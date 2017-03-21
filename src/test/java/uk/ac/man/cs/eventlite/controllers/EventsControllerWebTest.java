@@ -5,14 +5,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.mockito.Mockito.*;
+
+import java.util.Collections;
+import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -24,15 +31,25 @@ import uk.ac.man.cs.eventlite.entities.Venue;
 
 @AutoConfigureMockMvc
 public class EventsControllerWebTest extends TestParent {
-
+//    private EventsControllerWeb controller;
 	@Autowired
 	private MockMvc mvc;
 	
 	@Autowired
 	private EventService eventService;
 	
-	@Autowired
+	@Mock
 	private VenueService venueService;
+	
+	@Mock
+	private Venue venue;
+	
+//	@Before
+//	public void setup(){
+//		MockitoAnnotations.initMocks(this);
+//		
+//		mockMvc = MockMvcBuilders.standaloneSetup(controller).setSingleView(venue).build();
+//	}
 
 	@Test
 	public void testGetAllEvents() throws Exception {
@@ -154,5 +171,34 @@ public class EventsControllerWebTest extends TestParent {
 		.andExpect(status().isOk()).andExpect(content().string(containsString("Alan Gilbert")))
 		.andExpect(view().name("events/detail"));
 	}
- 
+	
+	@Test
+	public void testViewVenueName() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Stopford")))
+		.andExpect(view().name("events/venues"));
+	}
+	
+	@Test
+	public void testViewVenueCapacity() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("500")))
+		.andExpect(view().name("events/venues"));
+	}
+	
+	@Test
+	public void testViewVenueAddress() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("S5 9NP")))
+		.andExpect(view().name("events/venues"));
+	}
+	
+	@Test
+	public void testUpcomingEvents() throws Exception {
+		when(venue.getEvents()).thenReturn(Collections.<Event> emptyList());
+		when(venueService.findById(5)).thenReturn(venue);
+		mvc.perform(MockMvcRequestBuilders.get("/events/venue/5").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("Gnother Event")))
+		.andExpect(view().name("events/venues"));
+	}
 }
