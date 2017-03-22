@@ -1,7 +1,10 @@
 package uk.ac.man.cs.eventlite.controllers;
 
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
+import uk.ac.man.cs.eventlite.entities.Event;
 
 @Controller
 @RequestMapping("/venues")
@@ -38,6 +42,34 @@ public class VenuesControllerWeb {
 		model.addAttribute("venues", venueService.findAllByNameContainingIgnoreCaseOrderByNameAsc(name));
 
 		return "venues/index";
+	}
+	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String detailedVenue(@PathVariable("id") long id , Model model) {
+		try{
+			List<Event> allEvents = (List<Event>) eventService.findAll();
+			List<Event> upcomingEvents = new ArrayList<Event>();
+			List<Event> pastEvents = new ArrayList<Event>();
+			Date current = new Date();
+			
+			for(Event e : allEvents){
+				if(e.getVenue().getId() == id){
+					if(e.getDate().before(current)){
+						pastEvents.add(e);
+					}
+				else{
+					upcomingEvents.add(e);
+				}
+			}
+			}
+			model.addAttribute("upcoming", upcomingEvents);
+			model.addAttribute("pastEvent", pastEvents);
+			model.addAttribute("venue", venueService.findById(id));
+//			model.addAttribute("venue",venueService.findOne(id));
+		} catch(Exception ex){
+			System.out.println("Exception came........");
+		}
+		return "venues/detail";
 	}
 	
 	@RequestMapping(value = "/{id}/delete", method = RequestMethod.POST, produces = { MediaType.TEXT_HTML_VALUE })

@@ -21,7 +21,7 @@
   <tbody>
     {{#venues}}
     <tr>
-      <td>{{name}}</td>
+      <td><a href="/venues/{{id}}">{{name}}</a></td>
       <td>{{address}}</td>
       <td>{{capacity}}</td>
       <td><a class="btn btn-primary" role="submit" href="/venues/{{id}}/update">Update</a></td>
