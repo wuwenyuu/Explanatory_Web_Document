@@ -49,5 +49,6 @@ public class VenuesControllerWeb {
 			return "redirect:/venues";
 		else
 			return "venues/deleteVenueFail";
+
 	}
 }
