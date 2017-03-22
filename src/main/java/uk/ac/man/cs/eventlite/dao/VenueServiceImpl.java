@@ -48,6 +48,17 @@ public class VenueServiceImpl implements VenueService {
 	}
 	
 	@Override
+	public boolean delete(long id) {
+		if(venueRepository.findById(id).getEvents().isEmpty())
+		{
+			venueRepository.delete(id);
+			return true;
+		}
+		else
+			return false;
+	}
+	
+	@Override
 	public Venue findOneByName(String name) {
 		return venueRepository.findOneByName(name);
 		//<S extends T> S save(S entity);
