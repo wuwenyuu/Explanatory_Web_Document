@@ -10,6 +10,8 @@ public interface VenueService {
 	public long count();
 	
 	public void save(Venue venue);
+	
+	public boolean delete(long id);
 
 	public Venue findById(long id);
 	

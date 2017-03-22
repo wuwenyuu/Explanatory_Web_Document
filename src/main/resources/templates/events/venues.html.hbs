@@ -48,6 +48,9 @@
     	<th>
     	<a class="btn btn-primary" role="button" href="/events">Back</a> 
     	</th>
+    	<th>
+    	  <form action="/venues/{{id}}/delete" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
+    	</th>
 {{/partial}}
 
 {{> layouts/base title="Venue Information"}}
