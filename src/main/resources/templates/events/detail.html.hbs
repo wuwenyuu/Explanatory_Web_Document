@@ -37,8 +37,31 @@
     </tr>
     
 </table>
+
+    <div id="map" style="width: 100%; height: 700px;"></div>
+    <script>
+
+      var initMap = function () {
+	      var map = new google.maps.Map(document.getElementById('map'), {
+	        zoom: 14,
+	        center: {lat: 53.480726, lng: -2.2426739}
+	      });
+	      
+	      var marker = new google.maps.Marker({
+	        map: map,
+	        position: {lat: {{event.venue.lat}}, lng: {{event.venue.lon}} },
+	        title: "{{event.name}}"
+	      });
+      }
+
+
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeo_GPzufbodkG6TI6Dd77YmbEKzbznoY&callback=initMap">
+    </script>
   
 {{/partial}}
 
 {{> layouts/base title="Detailed Information"}}
-

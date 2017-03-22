@@ -59,8 +59,50 @@
 </table>
 <p>
   <a class="btn btn-primary" role="button" href="/events/new">Add a new Event</a>
-
 </p>
+    <div id="map" style="width: 100%; height: 700px;"></div>
+    <script>
+
+      var initMap = function () {
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 14,
+          center: {lat: 53.480726, lng: -2.2426739}
+        });
+
+        // Create an array of alphabetical characters used to label the markers.
+        var labels = '0123456789';
+
+        // Add some markers to the map.
+        // Note: The code uses the JavaScript Array.prototype.map() method to
+        // create an array of markers based on a given "locations" array.
+        // The map() method here has nothing to do with the Google Maps API.
+        var markers = locations.map(function(location, i) {
+          var marker = new google.maps.Marker({
+            position: {lat: location.lat, lng: location.lng},
+            label: labels[location.id],
+            title: location.name
+          });
+          marker.addListener('click', function() {window.location.href = "/events/" + location.id;});
+          return marker
+        });
+
+        // Add a marker clusterer to manage the markers.
+        var markerCluster = new MarkerClusterer(map, markers,
+            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+      }
+      var locations = [
+		    {{#futureEvents}}
+		    	{id: {{id}}, name: "{{name}}", lat: {{venue.lat}}, lng: {{venue.lon}} },
+		    {{/futureEvents}}
+      ]
+    </script>
+    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeo_GPzufbodkG6TI6Dd77YmbEKzbznoY&callback=initMap">
+    </script>
+
 {{/partial}}
 
 {{> layouts/base title="EventLite events"}}
