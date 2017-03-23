@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
+import uk.ac.man.cs.eventlite.entities.Venue;
 
 @Controller
 @RequestMapping("/venues")
@@ -38,4 +40,39 @@ public class VenuesControllerWeb {
 
 		return "venues/index";
 	}
+	
+	
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String updateVenue(@PathVariable("id") long id, Model model) {
+		model.addAttribute("venues", venueService.findById(id));
+		return "venues/update";
+	}
+	
+	
+	
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+			MediaType.TEXT_HTML_VALUE })
+	public String createVenueFromForm(@PathVariable("id") long id,
+			@RequestParam(value = "name", defaultValue = "0") String name,
+			@RequestParam(value = "address", defaultValue = "empty") String address, 
+			@RequestParam(value = "capacity", defaultValue = "0") int capacity, 
+			Model model) {
+		
+		Venue venue = venueService.findById(id);
+		venue.setName(name);
+		venue.setAddress(address);
+		venue.setCapacity(capacity);
+		venueService.save(venue);
+
+		return "redirect:/venues/";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
