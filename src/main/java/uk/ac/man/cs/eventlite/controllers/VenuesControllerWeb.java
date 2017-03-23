@@ -1,6 +1,8 @@
 package uk.ac.man.cs.eventlite.controllers;
 
 
+import java.sql.Time;
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +62,19 @@ public class VenuesControllerWeb {
 		
 		Venue venue = venueService.findById(id);
 		venue.setName(name);
-		venue.setAddress(address);
 		venue.setCapacity(capacity);
+
+		
+		if (address.matches(".{1,299}[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}"))
+		{	
+			venue.setAddress(address);
+		}else{
+			return "redirect:/{id}/update";
+		}
+		
+
 		venueService.save(venue);
+		
 
 		return "redirect:/venues/";
 	}
