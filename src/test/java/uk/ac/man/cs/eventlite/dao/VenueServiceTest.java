@@ -2,6 +2,7 @@ package uk.ac.man.cs.eventlite.dao;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -18,6 +19,9 @@ public class VenueServiceTest extends TestParent {
 
 	@Autowired
 	private VenueService venueService;
+	
+	@Autowired
+	private EventService eventService;
 
 	@Test
 	public void findAll() {

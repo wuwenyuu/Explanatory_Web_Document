@@ -2,11 +2,13 @@ package uk.ac.man.cs.eventlite.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 
 import org.hamcrest.Matchers;
 import org.hamcrest.beans.HasProperty;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -68,5 +70,12 @@ public class VenuesControllerWebTest extends TestParent {
 		
 		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=kil").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("venues/index"));
+	}
+	
+	@Test
+	public void deleteVenueWithEvent() throws Exception {		
+		mvc.perform(MockMvcRequestBuilders.post("/venues/4/delete").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(""))
+		.andExpect(view().name("venues/deleteVenueFail"));		
 	}
 }
