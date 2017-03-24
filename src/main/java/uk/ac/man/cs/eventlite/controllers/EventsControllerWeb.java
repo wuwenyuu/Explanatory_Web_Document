@@ -6,12 +6,15 @@ import java.util.LinkedList;
 import java.util.List;
 import java.sql.Time;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.twitter.api.Twitter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +43,17 @@ public class EventsControllerWeb {
 	@Autowired
 	private VenueService venueService;
 
+	private Twitter twitter;
+	
+	private ConnectionRepository connectionRepository;
+	
+	@Inject
+	public EventsControllerWeb(Twitter twitter, ConnectionRepository connectionRepository)
+	{
+		this.twitter = twitter;
+		this.connectionRepository = connectionRepository;
+	}
+	
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
 
