@@ -1,6 +1,7 @@
 package uk.ac.man.cs.eventlite.controllers;
 
 import static org.hamcrest.core.StringContains.containsString;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -8,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -16,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -85,6 +88,23 @@ public class EventsControllerWebTest extends TestParent {
 	@Test
 	public void testUpdate() throws Exception{
 		mvc.perform(get("/events/34/update").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andExpect(view().name("events/update"));
+		
+	}
+	
+    @Test
+	public void updateVenueHtml() throws Exception {
+ 
+    	long countBefore = eventService.count();
+		String name = "testevent";
+		String venuename = "Richmond Road, KT2 5PL";
+		Date date = null;
+		String description = "testdescription";
+		Date time = null;
+		mvc.perform(MockMvcRequestBuilders.post(name, venuename, date, description, time).accept(MediaType.TEXT_HTML));
+		long countAfter = eventService.count();
+		assertEquals(countAfter, countBefore);
+		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=testevent").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+		.andExpect(view().name("events/index"));
 		
 	}
 	

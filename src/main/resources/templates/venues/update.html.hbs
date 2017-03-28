@@ -1,0 +1,36 @@
+{{#partial "content"}}
+<h1>{{#venues}}{{name}}{{/venues}}</h1>
+
+
+
+
+<form method="post">
+	<div class="form-group">
+		<div class="col-sm-4">
+		  <label for="name">Name:</label>
+		  <input type="text" class="form-control" id="name" name="name" maxlength="255" placeholder="{{venues.name}}" value="{{venues.name}}" max="255" autofocus required>
+		</div>
+		<div class="col-sm-4">
+		  <label for="address">Address:</label>
+		  <input type="text" class="form-control" id="address" name="address" placeholder="{{venues.address}}" value="{{venues.address}}" autofocus required>
+		</div>
+		<div class="col-sm-4">
+		  <label for="capacity">Capacity:</label>
+		  <input type="text" class="form-control" id="capacity" name="capacity" placeholder="{{venues.capacity}}" value="{{venues.capacity}}" min="1" autofocus required>
+		</div>
+		
+		
+
+		
+		<div>
+			<button class="btn btn-primary" type="submit">Update</button>
+		</div>
+	</div>
+</form>
+
+
+
+
+{{/partial}}
+
+{{> layouts/base title="EventLite update"}}

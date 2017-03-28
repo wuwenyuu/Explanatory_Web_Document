@@ -89,7 +89,7 @@ public class EventsControllerWeb {
 			MediaType.TEXT_HTML_VALUE })
 	public String createEventFromForm(@PathVariable("id") long id,
 			@RequestParam(value = "name", defaultValue = "0") String name,
-			@RequestParam(value = "venueid", defaultValue = "0") long venueid, 
+			@RequestParam(value = "venuename", defaultValue = "0") String venuename,	
 			@RequestParam (value="date")@DateTimeFormat(pattern="yyyy-MM-dd") Date date, 
 			@RequestParam (value="description", defaultValue="empty") String description,
 			@RequestParam (value="time")@DateTimeFormat(pattern="HH:mm:SS") Date time,
@@ -98,7 +98,7 @@ public class EventsControllerWeb {
 		Event event = eventService.findById(id);
 		//Event event = new Event();
 		event.setName(name);
-		event.setVenue(venueService.findById(venueid));
+		event.setVenue(venueService.findOneByName(venuename));
 		event.setDate(date);
 		event.setDescription(description);
 		event.setTime(time);

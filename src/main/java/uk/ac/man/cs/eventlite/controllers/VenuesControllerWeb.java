@@ -2,6 +2,7 @@ package uk.ac.man.cs.eventlite.controllers;
 
 
 import java.util.ArrayList;
+import java.sql.Time;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
 import uk.ac.man.cs.eventlite.entities.Event;
+import uk.ac.man.cs.eventlite.entities.Venue;
 
 @Controller
 @RequestMapping("/venues")
@@ -83,4 +85,40 @@ public class VenuesControllerWeb {
 			return "venues/deleteVenueFail";
 
 	}
+	
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String updateVenue(@PathVariable("id") long id, Model model) {
+		model.addAttribute("venues", venueService.findById(id));
+		return "venues/update";
+	}
+	
+	
+	
+	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+			MediaType.TEXT_HTML_VALUE })
+	public String createVenueFromForm(@PathVariable("id") long id,
+			@RequestParam(value = "name", defaultValue = "0") String name,
+			@RequestParam(value = "address", defaultValue = "empty") String address, 
+			@RequestParam(value = "capacity", defaultValue = "0") int capacity, 
+			Model model) {
+		
+		Venue venue = venueService.findById(id);
+		venue.setName(name);
+		venue.setCapacity(capacity);
+
+		
+		if (address.matches(".{1,299}[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}"))
+		{	
+			venue.setAddress(address);
+		}else{
+			return "redirect:/{id}/update";
+		}
+		
+
+		venueService.save(venue);
+		
+
+		return "redirect:/venues/";
+	}
+	
 }

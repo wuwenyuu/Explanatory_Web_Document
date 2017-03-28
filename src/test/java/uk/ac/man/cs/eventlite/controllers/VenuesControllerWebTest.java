@@ -21,6 +21,7 @@ import uk.ac.man.cs.eventlite.TestParent;
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
 import uk.ac.man.cs.eventlite.entities.Venue;
+import static org.junit.Assert.*;
 
 @AutoConfigureMockMvc
 public class VenuesControllerWebTest extends TestParent {
@@ -73,9 +74,32 @@ public class VenuesControllerWebTest extends TestParent {
 	}
 	
 	@Test
+
 	public void deleteVenueWithEvent() throws Exception {		
 		mvc.perform(MockMvcRequestBuilders.post("/venues/4/delete").accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk()).andExpect(content().string(""))
 		.andExpect(view().name("venues/deleteVenueFail"));		
 	}
+
+	public void testUpdateVenue() throws Exception{
+		mvc.perform(get("/venues/34/update").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andExpect(view().name("venues/update"));
+		
+	}
+	
+    @Test
+	public void updateVenueHtml() throws Exception {
+ 
+    	long countBefore = eventService.count();
+		String name = "testvenue";
+		String address = "Richmond Road, KT2 5PL";
+		int capacity = 200;
+		mvc.perform(MockMvcRequestBuilders.post(name, address, capacity).accept(MediaType.TEXT_HTML));
+		long countAfter = eventService.count();
+		assertEquals(countAfter, countBefore);
+		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+		.andExpect(view().name("venues/index"));
+		
+	}
+
+	
 }
