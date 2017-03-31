@@ -61,7 +61,22 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeo_GPzufbodkG6TI6Dd77YmbEKzbznoY&callback=initMap">
     </script>
+		
+  {{#tweets}}
+   <div class="alert alert-success">
+  Your tweet: <strong> tweet</strong> was posted!
+</div>
+  {{/tweets}}
   
+  <form action="/events/twitter" method="get" >
+<div class="input-group">
+ <input type="hidden" class="form-control" name="eventId" placeholder="{{id}}" value="{{id}}"/>
+  <input type="text" class="form-control" name="tweet" placeholder="Tweet about this event ... "/>
+  <div class="input-group-btn">
+  <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
+  </div>
+  </div>
+</form>
 {{/partial}}
 
 {{> layouts/base title="Detailed Information"}}
