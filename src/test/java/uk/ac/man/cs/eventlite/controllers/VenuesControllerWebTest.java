@@ -1,5 +1,6 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -69,4 +70,32 @@ public class VenuesControllerWebTest extends TestParent {
 		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=kil").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("venues/index"));
 	}
+
+	@Test
+	public void testGetNewVenueHtml() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/venues/new").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+		.andExpect(view().name("venues/new"));
+	}
+	
+    @Test
+	public void testAddVenueHtml() throws Exception {
+ 
+    	long countBefore = venueService.count();
+		String name = "testaddvenue";
+		String address = "12 Test Address";
+		String postcode = "SK78PD";
+		int capacity = 100;
+		String URL = "/venues/new";
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("venuename", name)
+				.param("venueaddress", address)
+				.param("venuepostcode", postcode)
+				.param("venuecapacity", ""+capacity)
+				.accept(MediaType.TEXT_HTML));
+		long countAfter = venueService.count();
+		assertEquals(countBefore+1, countAfter);
+		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testaddvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+		.andExpect(view().name("venues/index"));
+	}
+    	
 }

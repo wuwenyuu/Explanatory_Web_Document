@@ -1,6 +1,9 @@
 package uk.ac.man.cs.eventlite.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -14,11 +17,10 @@ import java.util.List;
 public class Venue {
 
 	@Id
+	@GeneratedValue
 	private long id;
 
 	private String name;
-	
-//	private String address;
 
 	private String address;
 
@@ -27,7 +29,7 @@ public class Venue {
 	@JsonIgnore
 	@OneToMany(mappedBy = "venue")
 	private List<Event> events;
-	  
+	
 	public Venue() { 
 	}
 	
@@ -50,17 +52,10 @@ public class Venue {
 		return name;
 	}
 	
-//	public String getAddress() {
-//		return address;
-//	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-//	public void setAddress(String address) {
-//		this.address = address;
-//	}
 
 	public String getAddress() {
 		return address;

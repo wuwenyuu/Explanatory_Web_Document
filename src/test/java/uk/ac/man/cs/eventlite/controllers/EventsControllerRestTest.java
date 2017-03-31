@@ -72,6 +72,6 @@ public class EventsControllerRestTest extends TestParent {
 	
  	@Test
  	public void testDeleteEvent() throws Exception {
- 		mvc.perform(MockMvcRequestBuilders.delete("/events/1")).andExpect(status().isNoContent());
+ 		mvc.perform(MockMvcRequestBuilders.delete("/events/4")).andExpect(status().isNoContent());
  	}
 }

@@ -5,7 +5,7 @@
     <p class="h2 text-danger">There were errors in the submitted event!</p>
   {{/if}}
 
-  <form action="/events/new/{eventname}/{eventdate}/{eventvenue}/{eventtime}/{eventdescription}" method="post">
+  <form action="/events/new" method="post">
         <div class="form-group {{#if errors.template}}has-error{{/if}}">
       
       <label for="name">Event Name</label>

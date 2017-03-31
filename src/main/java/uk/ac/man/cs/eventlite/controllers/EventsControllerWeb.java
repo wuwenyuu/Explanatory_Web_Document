@@ -107,8 +107,6 @@ public class EventsControllerWeb {
 		return "redirect:/events/";
 	}
 	
-	
-	
 
  	@ExceptionHandler(ConversionFailedException.class)
  	public String missingParameterHandler(Exception exception) {
@@ -129,13 +127,9 @@ public class EventsControllerWeb {
 		return "events/new";
 	}
 	
-	@RequestMapping(value = "/new/{eventname}/{eventdate}/{eventvenue}/{eventtime}/{eventdescription}", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+	@RequestMapping(value = "/new", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
-	public String createEventFromForm(@PathVariable("eventname") String eventname, 
-			@PathVariable("eventdate") String eventdate,
-			@PathVariable("eventvenue") String eventvenue,
-			@PathVariable("eventvenue") String eventtime,
-			@PathVariable("eventdescription") String eventdescription,
+	public String createEventFromForm(
 			@RequestParam(value = "eventname", defaultValue = "Empty") String name, 
 			@RequestParam(value = "eventdate", defaultValue = "Empty") Date edate,
 			@RequestParam(value = "eventvenue", defaultValue = "Empty") String vname,
