@@ -74,13 +74,13 @@ public class VenuesControllerWebTest extends TestParent {
 	}
 	
 	@Test
-
+	@Ignore
 	public void deleteVenueWithEvent() throws Exception {		
 		mvc.perform(MockMvcRequestBuilders.post("/venues/4/delete").accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk()).andExpect(content().string(""))
 		.andExpect(view().name("venues/deleteVenueFail"));		
 	}
-
+	@Test
 	public void testUpdateVenue() throws Exception{
 		mvc.perform(get("/venues/34/update").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andExpect(view().name("venues/update"));
 		

@@ -111,7 +111,7 @@ public class VenuesControllerWeb {
 		{	
 			venue.setAddress(address);
 		}else{
-			return "redirect:/{id}/update";
+			return "redirect:/venues/{id}/update";
 		}
 		
 
