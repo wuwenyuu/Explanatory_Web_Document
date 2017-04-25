@@ -62,33 +62,33 @@ public class EventsControllerWeb {
     		@RequestParam(value = "tweet", required=false) String tweet, Model model) {
     	
         if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-        	System.out.println(" FIRST WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
             return "redirect:/connect/twitter";
         }
 
-//        model.addAttribute(twitter.userOperations().getUserProfile());
-//        CursoredList<TwitterProfile> friends = twitter.friendOperations().getFriends();
-//        model.addAttribute("friends", friends);
-        System.out.println(" SECOND WORKS!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 ");
-        //return "redirect:/events/tweet/{id}";
-        return "redirect:/events/tweet/{id}/{tweet}";
+        return "redirect:/events/tweet/"+id+"/"+tweet;
     }
     
     @RequestMapping(value = "/tweet/{id}/{tweet}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String sendTweet(@PathVariable("eventId") long id,
+	public String sendTweet(@PathVariable("id") long id,
 			@PathVariable("tweet") String tweet, Model model) {
 		try{
 			twitter.timelineOperations().updateStatus(tweet);
 			model.addAttribute("event", eventService.findById(id));
 			model.addAttribute("tweets", tweet);
 			
-		}catch(Exception ex){}
+		}catch(Exception ex){
+			System.out.println("Unsuccessful tweet!!!");
+		}
 
 		return "events/detail";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
+		
+		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+	            return "redirect:/connect/twitter";
+	        }
 
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
@@ -130,8 +130,6 @@ public class EventsControllerWeb {
 		return "events/update";
 	}
 	
-	
-	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
 	public String createEventFromForm(@PathVariable("id") long id,
@@ -153,9 +151,6 @@ public class EventsControllerWeb {
 
 		return "redirect:/events/";
 	}
-	
-	
-	
 
  	@ExceptionHandler(ConversionFailedException.class)
  	public String missingParameterHandler(Exception exception) {
@@ -208,7 +203,6 @@ public class EventsControllerWeb {
 
 		return "redirect:/events/";
 	}
-	
 	
  	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String detailedEvent(@PathVariable("id") long id, Model model) {
