@@ -29,7 +29,7 @@ public class EventServiceTest extends TestParent {
 
 		assertThat("findAll should get all events.", count, equalTo((long) events.size()));
 	}
-	
+
 	@Test 
 	public void save(){
 		
@@ -55,37 +55,36 @@ public class EventServiceTest extends TestParent {
 
 		assertEqual(count, (long) events.size());
 	}
-	
+
 	@Test
 	public void findAllByNameContainingIgnoreCaseOrderByDateAscNameAsc()
 	{
 		Venue venue1 = new Venue();
- 		venue1.setId(1);
  		venue1.setName("Kilburn");
  		venue1.setCapacity(1000);
  		
  		venueService.save(venue1);
  		
 		Event eventtest1 = new Event();
-		eventtest1.setId(3);
+		eventtest1.setId(1);
 		eventtest1.setName("testevent");
-		eventtest1.setVenue(venue1);
+		eventtest1.setVenue(null);
 		eventtest1.setDate(null);
 		
 		eventService.save(eventtest1);
 		
 		Event eventtest2 = new Event();
-		eventtest2.setId(4);
+		eventtest2.setId(2);
 		eventtest2.setName("eventName");
-		eventtest2.setVenue(venue1);
+		eventtest2.setVenue(null);
 		eventtest2.setDate(null);
 		
 		eventService.save(eventtest2);
 		
 		Event eventtest3 = new Event();
-		eventtest3.setId(4);
+		eventtest3.setId(3);
 		eventtest3.setName("this is a test");
-		eventtest3.setVenue(venue1);
+		eventtest3.setVenue(null);
 		eventtest3.setDate(null);
 		
 		eventService.save(eventtest3);
@@ -104,7 +103,7 @@ public class EventServiceTest extends TestParent {
 		
 		// DATE AND TIME ORDERING SHOULD BE TESTED TOO!!!!!!
 	}
-	
+
 	@Test 
  	public void deleteById(){
  		
@@ -127,13 +126,16 @@ public class EventServiceTest extends TestParent {
  		long count = eventService.count();
  		count--;
  		
- 		eventService.delete(eventtest.getId());
+ 		
+ 		//This is testing the current eventService not a mocked version
+ 		//need to fix this
+ 		eventService.delete(4);
  		
  		List<Event> events = (List<Event>) eventService.findAll();
  
  		assertEqual(count, (long) events.size());
  	}
- 	
+
  	@Test 
  	public void deleteByObject(){
  		

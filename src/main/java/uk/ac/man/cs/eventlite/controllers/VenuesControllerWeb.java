@@ -8,9 +8,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -121,4 +123,36 @@ public class VenuesControllerWeb {
 		return "redirect:/venues/";
 	}
 	
+
+    @RequestMapping(value = "/new", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+    public String newGreetingHtml(Model model) {
+	  return "venues/new";
+    }
+
+    @RequestMapping(value = "/new", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
+			MediaType.TEXT_HTML_VALUE })
+	public String createVenueFromForm(
+			@RequestParam(value = "venuename", defaultValue = "Empty") String name, 
+			@RequestParam(value = "venueaddress", defaultValue = "Empty") String addr,
+			@RequestParam(value = "venuepostcode", defaultValue = "Empty") String postcode,
+			@RequestParam(value = "venuecapacity", defaultValue = "0") int cap,
+			Model model) {
+		
+		Venue venue = new Venue();
+		venue.setName(name);
+		addr = addr + " " + postcode;
+	    venue.setAddress(addr);
+		venue.setCapacity(cap);
+		venueService.save(venue);
+
+		return "redirect:/venues/";
+		
+	}
+    
+ 	@ExceptionHandler(ConversionFailedException.class)
+ 	public String missingParameterHandler(Exception exception) {
+ 
+ 	    return "redirect:/venues";
+ 	    // Actual exception handling
+ 	}
 }

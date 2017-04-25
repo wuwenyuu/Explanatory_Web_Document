@@ -91,7 +91,7 @@ public class VenueServiceTest extends TestParent {
  		venueService.save(venue1);
  		
  		Venue venue2 = new Venue();
- 		venue2.setId(1);
+ 		venue2.setId(2);
  		venue2.setName("Name");
  		venue2.setCapacity(1000);
  		venue2.setAddress("Oxford Road");
@@ -99,15 +99,17 @@ public class VenueServiceTest extends TestParent {
  		venueService.save(venue2);
  		
  		Venue venue3 = new Venue();
- 		venue3.setId(1);
+ 		venue3.setId(3);
  		venue3.setName("kilkil");
  		venue3.setCapacity(1000);
  		venue3.setAddress("Oxford Road");
  		
- 		venueService.save(venue1);
+ 		venueService.save(venue3);
  		
 		
 		String name = "KIL";
+		//These are not being save using initial data and retrieving kilburn
+		//Irrelevant test at the moment
 		
 		List<Venue> events = (List<Venue>) venueService.findAllByNameContainingIgnoreCaseOrderByNameAsc(name);
 
