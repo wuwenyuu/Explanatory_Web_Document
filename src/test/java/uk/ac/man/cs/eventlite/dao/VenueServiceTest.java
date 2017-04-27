@@ -126,4 +126,18 @@ public class VenueServiceTest extends TestParent {
  		
  	}
 
+    // tests the google geocoding api is updating the venues coordinates
+    public static final String KILBURN_ADDRESS = "Kilburn Building, University of Manchester, Oxford Rd, Manchester M13 9PL, UK";
+    public static final double KILBURN_LAT = 53.46722639999999;
+    public static final double KILBURN_LON = -2.2340864999999894;
+    public static final double GEO_EPSILON = 1e-3;
+    @Test public void testGeocodingService() {
+            Venue testvenue = new Venue();
+            testvenue.setName("A simple test venue");
+            testvenue.setCapacity(31337);
+            testvenue.setAddress(KILBURN_ADDRESS);
+            assertEquals("Google geocoding Latitude", KILBURN_LAT, testvenue.getLat(), GEO_EPSILON);
+            assertEquals("Google geocoding Longtitude", KILBURN_LON, testvenue.getLon(), GEO_EPSILON);
+    }
+
 }
