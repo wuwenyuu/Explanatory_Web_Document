@@ -1,6 +1,7 @@
 package uk.ac.man.cs.eventlite.config;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.ValidationMode;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -22,6 +23,9 @@ public class DataLayer {
 		bean.setDataSource(dataSource);
 		bean.setJpaVendorAdapter(jpaVendorAdapter);
 		bean.setPackagesToScan(PACKAGES);
+		
+		//Entities are validated in controllers, don't need to do it twice. 
+		bean.setValidationMode(ValidationMode.NONE);
 		bean.afterPropertiesSet();
 
 		return bean.getObject();
