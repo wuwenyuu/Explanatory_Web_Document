@@ -134,14 +134,17 @@ public class VenuesControllerWeb {
 	public String createVenueFromForm(
 			@RequestParam(value = "venuename", defaultValue = "Empty") String name, 
 			@RequestParam(value = "venueaddress", defaultValue = "Empty") String addr,
-			@RequestParam(value = "venuepostcode", defaultValue = "Empty") String postcode,
 			@RequestParam(value = "venuecapacity", defaultValue = "0") int cap,
 			Model model) {
 		
 		Venue venue = new Venue();
 		venue.setName(name);
-		addr = addr + " " + postcode;
-	    venue.setAddress(addr);
+		if (addr.matches(".{1,299}[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}"))
+		{	
+			venue.setAddress(addr);
+		}else{
+			return "redirect:/venues/new";
+		}
 		venue.setCapacity(cap);
 		venueService.save(venue);
 

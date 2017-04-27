@@ -113,14 +113,12 @@ public class VenuesControllerWebTest extends TestParent {
  
     	long countBefore = venueService.count();
 		String name = "testaddvenue";
-		String address = "12 Test Address";
-		String postcode = "SK78PD";
+		String address = "12 Test Address, M15 6GH";
 		int capacity = 100;
 		String URL = "/venues/new";
 		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("venuename", name)
 				.param("venueaddress", address)
-				.param("venuepostcode", postcode)
 				.param("venuecapacity", ""+capacity)
 				.accept(MediaType.TEXT_HTML));
 		long countAfter = venueService.count();
