@@ -55,9 +55,9 @@ public class EventsControllerWebTest extends TestParent {
 //	}
 
 	@Test
-	public void testGetAllEvents() throws Exception {
-		mvc.perform(get("/events").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-				.andExpect(view().name("events/index"));
+	public void testGetAllEventsNoTwitterConn() throws Exception {
+		mvc.perform(get("/events").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
+				.andExpect(view().name("redirect:/connect/twitter"));
 	}
 	
 	@Test

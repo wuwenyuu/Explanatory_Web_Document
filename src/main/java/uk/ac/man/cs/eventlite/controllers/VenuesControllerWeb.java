@@ -68,6 +68,7 @@ public class VenuesControllerWeb {
 			model.addAttribute("pastEvent", pastEvents);
 			model.addAttribute("venue", venueService.findById(id));
 //			model.addAttribute("venue",venueService.findOne(id));
+			
 		} catch(Exception ex){
 			System.out.println("Exception came........");
 		}
@@ -83,7 +84,6 @@ public class VenuesControllerWeb {
 			return "redirect:/venues";
 		else
 			return "venues/deleteVenueFail";
-
 	}
 	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
@@ -91,8 +91,6 @@ public class VenuesControllerWeb {
 		model.addAttribute("venues", venueService.findById(id));
 		return "venues/update";
 	}
-	
-	
 	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
@@ -114,9 +112,7 @@ public class VenuesControllerWeb {
 			return "redirect:/{id}/update";
 		}
 		
-
 		venueService.save(venue);
-		
 
 		return "redirect:/venues/";
 	}
