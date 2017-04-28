@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
@@ -82,6 +83,21 @@ public class EventsControllerWeb {
 
 		return "events/detail";
 	}
+    
+//    @RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+//    public String displayTimeline(Model model) {
+//		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+//	            return "redirect:/connect/twitter";
+//	        }
+//		 List<Tweet> tweets = twitter.timelineOperations().getHomeTimeline();
+//		 model.addAttribute("Tweets",tweets);
+//		 
+////	       try {
+////	            List<Tweet> statuses = ((TimelineOperations) twitter).getHomeTimeline();
+////	        } catch
+//	
+//		return "events/index";
+//    }
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
@@ -92,6 +108,10 @@ public class EventsControllerWeb {
 
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
+		
+		List<Tweet> tweets = twitter.timelineOperations().getUserTimeline(5);
+		model.addAttribute("AllTweets", tweets);
+//		tweets.get(0).getCreatedAt()
 		
 		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
 			if (event.hasPassed())
