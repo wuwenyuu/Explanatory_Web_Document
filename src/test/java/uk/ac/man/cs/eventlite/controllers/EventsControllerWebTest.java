@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 import static org.mockito.Mockito.*;
 
+import java.sql.Time;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +42,9 @@ public class EventsControllerWebTest extends TestParent {
 	
 	@Autowired
 	private EventService eventService;
+	
+	@Autowired
+	private VenueService realVenueService;
 	
 	@Mock
 	private VenueService venueService;
@@ -108,46 +113,76 @@ public class EventsControllerWebTest extends TestParent {
 		
 	}
 	
-	@Ignore
 	@Test
 	public void testSearchAnEvent() throws Exception {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date1 = cal.getTime();
+		
+		cal = Calendar.getInstance();
+		cal.set(2010, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date2 = cal.getTime();
+		
+		Date time1 = Time.valueOf("13:00:00");
+		Date time2 = Time.valueOf("00:00:00");
+		
 		Venue venue1 = new Venue();
  		venue1.setId(1);
  		venue1.setName("Kilburn");
  		venue1.setCapacity(1000);
+ 		venue1.setAddress("Oxford Road");
  		
- 		venueService.save(venue1);
+ 		realVenueService.save(venue1);
  		
 		Event eventtest1 = new Event();
 		eventtest1.setId(3);
 		eventtest1.setName("testevent");
 		eventtest1.setVenue(venue1);
-		eventtest1.setDate(null);
-		eventtest1.setTime(null);
+		eventtest1.setDate(date1);
+		eventtest1.setTime(time1);
 		
 		eventService.save(eventtest1);
 		
 		Event eventtest2 = new Event();
-		eventtest2.setId(4);
-		eventtest2.setName("eventName");
+		eventtest2.setId(2);
+		eventtest2.setName("testevent");
 		eventtest2.setVenue(venue1);
-		eventtest2.setDate(null);
-		eventtest2.setTime(null);
+		eventtest2.setDate(date2);
+		eventtest2.setTime(time2);
 		
 		eventService.save(eventtest2);
 		
-		Event eventtest3 = new Event();
-		eventtest3.setId(4);
-		eventtest3.setName("this is a test");
-		eventtest3.setVenue(venue1);
-		eventtest3.setDate(null);
-		eventtest3.setTime(null);
-		
-		
-		eventService.save(eventtest3);
-		
 		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("events/index"));
+	}
+	public void testSearchAVenue() throws Exception {
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(1000);
+ 		venue1.setAddress("Oxford Road");
+ 		
+ 		venueService.save(venue1);
+ 		
+ 		Venue venue2 = new Venue();
+ 		venue2.setId(2);
+ 		venue2.setName("Kilners");
+ 		venue2.setCapacity(1000);
+ 		venue2.setAddress("Oxford Road");
+ 		
+ 		venueService.save(venue2);
+ 		
+ 		Venue venue3 = new Venue();
+ 		venue3.setId(3);
+ 		venue3.setName("kilkil");
+ 		venue3.setCapacity(1000);
+ 		venue3.setAddress("Oxford Road");
+ 		
+ 		venueService.save(venue3);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=kil").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+				.andExpect(view().name("venues/index"));
 	}
  	
  	@Test
