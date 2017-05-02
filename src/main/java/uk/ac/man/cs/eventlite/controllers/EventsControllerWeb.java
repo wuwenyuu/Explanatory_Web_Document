@@ -6,12 +6,20 @@ import java.util.LinkedList;
 import java.util.List;
 import java.sql.Time;
 
+import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.health.Status;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.social.connect.ConnectionRepository;
+import org.springframework.social.twitter.api.CursoredList;
+import org.springframework.social.twitter.api.TimelineOperations;
+import org.springframework.social.twitter.api.Tweet;
+import org.springframework.social.twitter.api.Twitter;
+import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,12 +47,71 @@ public class EventsControllerWeb {
 
 	@Autowired
 	private VenueService venueService;
+	
+	private Twitter twitter;
+
+    private ConnectionRepository connectionRepository;
+    
+    @Inject
+    public EventsControllerWeb(Twitter twitter, ConnectionRepository connectionRepository){
+    	this.twitter = twitter;
+    	this.connectionRepository = connectionRepository;
+    }
+    
+    @RequestMapping(value="/twitter",method=RequestMethod.GET)
+    public String connectTwitterTweet( @RequestParam(value = "eventId", required=false) Long id,
+    		@RequestParam(value = "tweet", required=false) String tweet, Model model) {
+    	
+        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+            return "redirect:/connect/twitter";
+        }
+
+        return "redirect:/events/tweet/"+id+"/"+tweet;
+    }
+    
+    @RequestMapping(value = "/tweet/{id}/{tweet}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String sendTweet(@PathVariable("id") long id,
+			@PathVariable("tweet") String tweet, Model model) {
+		try{
+			twitter.timelineOperations().updateStatus(tweet);
+			model.addAttribute("event", eventService.findById(id));
+			model.addAttribute("tweets", tweet);
+			
+		}catch(Exception ex){
+			System.out.println("Unsuccessful tweet!!!");
+		}
+
+		return "events/detail";
+	}
+    
+//    @RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+//    public String displayTimeline(Model model) {
+//		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+//	            return "redirect:/connect/twitter";
+//	        }
+//		 List<Tweet> tweets = twitter.timelineOperations().getHomeTimeline();
+//		 model.addAttribute("Tweets",tweets);
+//		 
+////	       try {
+////	            List<Tweet> statuses = ((TimelineOperations) twitter).getHomeTimeline();
+////	        } catch
+//	
+//		return "events/index";
+//    }
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
+		
+		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+	            return "redirect:/connect/twitter";
+	        }
 
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
+		
+		List<Tweet> tweets = twitter.timelineOperations().getUserTimeline(5);
+		model.addAttribute("AllTweets", tweets);
+//		tweets.get(0).getCreatedAt()
 		
 		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
 			if (event.hasPassed())
@@ -82,8 +149,6 @@ public class EventsControllerWeb {
 		model.addAttribute("events", eventService.findById(id));
 		return "events/update";
 	}
-	
-	
 	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
