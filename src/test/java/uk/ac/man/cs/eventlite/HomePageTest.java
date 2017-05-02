@@ -21,18 +21,18 @@ public class HomePageTest extends TestParent {
 	@Autowired
 	private MockMvc mvc;
     
-	@Ignore
 	@Test
 	public void getRoot() throws Exception {
-		mvc.perform(get("/").accept(MediaType.TEXT_HTML)).andExpect(status().isFound());
+		mvc.perform(get("/").accept(MediaType.TEXT_HTML)).andExpect(status().isOk());
 	}
 
-	@Ignore
 	@Test
 	public void getJsonRoot() throws Exception {
 		mvc.perform(get("/").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
 		.andExpect(jsonPath("$.title", equalTo("EventLite Home")))
-		.andExpect(jsonPath("$._self", equalTo("http://localhost/")));
+		.andExpect(jsonPath("$._self", equalTo("http://localhost/")))
+		.andExpect(jsonPath("$.events", equalTo("http://localhost/events")))
+		.andExpect(jsonPath("$.venues", equalTo("http://localhost/venues")));
 	}
 }
