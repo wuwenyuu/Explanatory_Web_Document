@@ -103,12 +103,7 @@ public class VenuesControllerWebTest extends TestParent {
 				.andExpect(view().name("venues/index"));
 	}
 	
-	@Test
-	@Ignore
-	public void deleteVenueWithEvent() throws Exception {		
-		mvc.perform(MockMvcRequestBuilders.post("/venues/4/delete").accept(MediaType.TEXT_HTML))
-		.andExpect(status().isOk()).andExpect(content().string(""))
-		.andExpect(view().name("venues/deleteVenueFail"));		
+	@Test	
 	public void deleteVenueWithoutEvent() throws Exception {
 		when(venue.getEvents()).thenReturn(Collections.<Event> emptyList());
 		when(venueService.delete(1)).thenReturn(true);
