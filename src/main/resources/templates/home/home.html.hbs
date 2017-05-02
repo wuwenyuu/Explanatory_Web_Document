@@ -1,0 +1,28 @@
+{{#partial "content"}}
+<form action="/index" method="get" >
+
+  <div class="container">
+    <h1>EventLite</h1>
+    <p>Welcome to EventLite. See the <a href="/events">list of events</a> or <a href="/venues">list of venues</a> for more information.</p>
+  </div>
+  <h2><p>Upcoming Events:</p></h2>
+  
+  {{#futureEvents}}
+  <div class="panel panel-default">
+    <div>
+	    <div class="panel-heading">
+	      <h3 class="panel-title"><a href="/events/{{id}}?name={{name}}">{{name}}</a></h3>
+	    </div>
+	    <div class="panel-body">
+		  <a href="/venues/{{venue.id}}">{{venue.name}}</a><br/>
+	      {{date}}<br/>
+	      {{time}}
+	    </div>
+    </div>
+  </div>  
+  {{/futureEvents}}
+
+</form>
+
+{{/partial}}
+{{> layouts/base title="EventLite events"}}
