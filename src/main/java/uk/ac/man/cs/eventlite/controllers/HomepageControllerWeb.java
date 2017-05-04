@@ -46,8 +46,9 @@ public class HomepageControllerWeb {
 //	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 //	public String getMostPopVenue(Model model) {
 
-		
+		LinkedList<Venue> topvenue = new LinkedList<Venue>();
 		LinkedList<Event> mostPopVenueEvents = new LinkedList<Event>();
+		
 		
 		int maxvenueid = 0;
 		
@@ -56,31 +57,49 @@ public class HomepageControllerWeb {
 				maxvenueid=(int)event.getVenue().getId();
 			}
 		}
-		
+		int[] isselected = new int[maxvenueid + 1];
 	    int[] venueCount = new int[maxvenueid + 1];
+		for (int i=0;i<maxvenueid+1;i++) {
+			venueCount[i]=0;
+			isselected[i]=0;
+		}
+		
 		
 		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
-			venueCount[(int) event.getVenue().getId()]++;
+			if(event.getVenue()!=null && event.getVenue().getId()<maxvenueid){
+				venueCount[(int) event.getVenue().getId()]++;
+			}
+			
 		}
 		
 		int currentmax = 0;
 		int currentid = 0;
 		
-		for(int i=0;i<maxvenueid;i++){
-			if(venueCount[i]>currentmax){
-				currentmax = venueCount[i];			
-				currentid = i;
-			}
+		for(int j = 1; j<4;j++){
+			for(int i=0;i<maxvenueid;i++){
+				if(venueCount[i]>currentmax && isselected[currentid]==0){
+					currentmax = venueCount[i];			
+					currentid = i;
+				}
+				
+			}	
+			System.out.println("***********************************************************"+currentid);
 			
+			isselected[currentid]=1;
+			topvenue.add(venueService.findById(currentid));
+			currentmax=0;
+			currentid=0;
 		}
+
+
 		
 		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
-			if((int)event.getVenue().getId()==currentid){
+			if(event.getVenue()!=null && event.getVenue().getId()<maxvenueid && (int)event.getVenue().getId()==currentid && !event.hasPassed()){
 				mostPopVenueEvents.add(event);	
 			}	
 			
 		}
-		
+		model.addAttribute("topvenue", topvenue);
 		model.addAttribute("mostPopVenueEvents", mostPopVenueEvents);
 		return "home/home";
 	}

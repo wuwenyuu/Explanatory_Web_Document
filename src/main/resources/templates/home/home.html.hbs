@@ -14,28 +14,34 @@
 	      <h3 class="panel-title"><a href="/events/{{id}}?name={{name}}">{{name}}</a></h3>
 	    </div>
 	    <div class="panel-body">
-		  <a href="/venues/{{venue.id}}">{{venue.name}}</a><br/>
-	      {{date}}<br/>
-	      {{time}}
+		  Location: <a href="/venues/{{venue.id}}">{{venue.name}}</a><br/>
+		  Time: {{time}}<br/>
+	      Date: {{date}}
+	      
 	    </div>
     </div>
   </div>  
   {{/futureEvents}}
   
-    {{#mostPopVenueEvents}}
+
+      <h2><p>Most Popular Venues:</p></h2>
+ {{#topvenue}}
   <div class="panel panel-default">
     <div>
 	    <div class="panel-heading">
-	      <h3 class="panel-title"><a href="/events/{{id}}?name={{name}}">{{name}}</a></h3>
+	      <h3 class="panel-title"><a href="/venues/{{id}}?name={{name}}">{{name}}</a></h3>
 	    </div>
 	    <div class="panel-body">
-		  <a href="/venues/{{venue.id}}">{{venue.name}}</a><br/>
-	      {{date}}<br/>
-	      {{time}}
+	      Address: {{address}}<br/>
+	      Capacity: {{capacity}}
 	    </div>
     </div>
   </div>  
-  {{/mostPopVenueEvents}}
+  {{/topvenue}}
+
+
+
+
 
 </form>
 
