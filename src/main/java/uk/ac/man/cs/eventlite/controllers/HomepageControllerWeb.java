@@ -57,7 +57,7 @@ public class HomepageControllerWeb {
 			}
 		}
 		
-	    int[] venueCount = new int[maxvenueid];
+	    int[] venueCount = new int[maxvenueid + 1];
 		
 		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
 			venueCount[(int) event.getVenue().getId()]++;
