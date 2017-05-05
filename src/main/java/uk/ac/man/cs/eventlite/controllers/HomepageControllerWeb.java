@@ -41,7 +41,7 @@ public class HomepageControllerWeb {
 		model.addAttribute("futureEvents", futureEvents);
 
 		LinkedList<Venue> topvenue = new LinkedList<Venue>();
-		LinkedList<Event> mostPopVenueEvents = new LinkedList<Event>();
+		
 		
 		
 		int maxvenueid = 0;
@@ -90,14 +90,9 @@ public class HomepageControllerWeb {
 			currentid=0;
 		}
 
-		for (Event event : eventService.findAllByOrderByDateAscTimeAscNameAsc()) {
-			if(event.getVenue()!=null && event.getVenue().getId()<maxvenueid && (int)event.getVenue().getId()==currentid && !event.hasPassed()){
-				mostPopVenueEvents.add(event);	
-			}	
-			
-		}
+
 		model.addAttribute("topvenue", topvenue);
-		model.addAttribute("mostPopVenueEvents", mostPopVenueEvents);
+		
 		return "home/home";
 	}
 	
