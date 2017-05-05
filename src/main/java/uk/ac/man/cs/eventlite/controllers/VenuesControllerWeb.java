@@ -56,23 +56,24 @@ public class VenuesControllerWeb {
 			List<Event> pastEvents = new ArrayList<Event>();
 			Date current = new Date();
 			
-			for(Event e : allEvents){
+			for(Event e : allEvents)
+              if(e.getVenue()!=null){
 				if(e.getVenue().getId() == id){
 					if(e.getDate().before(current)){
 						pastEvents.add(e);
 					}
-				else{
-					upcomingEvents.add(e);
-				}
-			}
-			}
+				    else{
+					  upcomingEvents.add(e);
+				    }
+			     }
+			   }
 			model.addAttribute("upcoming", upcomingEvents);
 			model.addAttribute("pastEvent", pastEvents);
 			model.addAttribute("venue", venueService.findById(id));
 //			model.addAttribute("venue",venueService.findOne(id));
 			
 		} catch(Exception ex){
-			System.out.println("Exception came........");
+			System.out.println("Exception came........"+ ex.toString());
 		}
 		return "venues/detail";
 	}
