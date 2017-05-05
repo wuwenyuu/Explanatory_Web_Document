@@ -46,7 +46,7 @@ public class HomepageControllerWeb {
 		
 		int maxvenueid = 0;
 		
-		//finds the possi max number of venues in db
+		//finds the possible max number of venues in db
 		for (Venue venue : venueService.findAllByOrderByNameAsc()) {
 			if(venue!=null && (int)venue.getId()>maxvenueid){
 				maxvenueid=(int)venue.getId();
@@ -75,8 +75,7 @@ public class HomepageControllerWeb {
 
 		int currentmax = 0;
 		int currentid = 0;
-		
-		//currently iselected always seen as false for all elements
+	
 		for(int j = 1; j<4;j++){
 			for(int i=1;i<=maxvenueid;i++){
 				if(!isselected[i] && venueCount[i]>=currentmax){
