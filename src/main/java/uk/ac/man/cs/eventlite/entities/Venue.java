@@ -97,12 +97,20 @@ public class Venue {
 		return lon;
 	}
 
+    public static final double BOGUS_LAT = 53.4807593;
+    public static final double BOGUS_LON = -2.2426305;
 	public boolean findCoords()  {
 		if (address == null)
 			return false;
 		try {
 			GeoApiContext context = new GeoApiContext().setApiKey("AIzaSyAZrPWp7kC6ARg5hqFw1ROfyZ1n-z4Ig3o");
 			GeocodingResult[] results = GeocodingApi.geocode(context, address).await();
+			if (results.length == 0) {
+				lat = BOGUS_LAT;
+				lon = BOGUS_LON;
+				coordsSet = true;
+				return true;
+			}
 			lat = results[0].geometry.location.lat;
 			lon = results[0].geometry.location.lng;
 			coordsSet = true;
