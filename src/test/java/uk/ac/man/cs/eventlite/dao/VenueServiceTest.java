@@ -125,5 +125,34 @@ public class VenueServiceTest extends TestParent {
  		// TODO Auto-generated method stub
  		
  	}
+ 	
+ 	// acceptable drift from constants in this file, and reports from google api
+ 	public static final double GEO_EPSILON = 1e-3;
+
+    // tests the google geocoding api is updating the venues coordinates
+    public static final String KILBURN_ADDRESS = "Kilburn Building, University of Manchester, Oxford Rd, Manchester M13 9PL, UK";
+    public static final double KILBURN_LAT = 53.4672264;
+    public static final double KILBURN_LON = -2.2340865;
+    @Test public void testGeocodingService() {
+            Venue testvenue = new Venue();
+            testvenue.setName("A simple test venue");
+            testvenue.setCapacity(31337);
+            testvenue.setAddress(KILBURN_ADDRESS);
+            assertEquals("Google geocoding Latitude", KILBURN_LAT, testvenue.getLat(), GEO_EPSILON);
+            assertEquals("Google geocoding Longtitude", KILBURN_LON, testvenue.getLon(), GEO_EPSILON);
+    }
+    
+    // tests the google geocoding api is updating the venues coordinates
+    public static final String BOGUS_ADDRESS = "fksjiocvmeniofijduiooijifao";
+    public static final double BOGUS_LAT = 53.4807593;
+    public static final double BOGUS_LON = -2.2426305;
+    @Test public void testGeocodingServiceAddressDoesntExist() {
+            Venue testvenue = new Venue();
+            testvenue.setName("A simple test venue");
+            testvenue.setCapacity(31337);
+            testvenue.setAddress(BOGUS_ADDRESS);
+            assertEquals("Google geocoding Latitude", BOGUS_LAT, testvenue.getLat(), GEO_EPSILON);
+            assertEquals("Google geocoding Longtitude", BOGUS_LON, testvenue.getLon(), GEO_EPSILON);
+    }
 
 }

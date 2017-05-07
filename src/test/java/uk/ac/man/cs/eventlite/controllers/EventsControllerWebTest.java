@@ -256,4 +256,13 @@ public class EventsControllerWebTest extends TestParent {
 		.andExpect(status().isOk()).andExpect(content().string(containsString("Gnother Event")))
 		.andExpect(view().name("venues/detail"));
 	}
+	
+	@Test 
+	public void testGoogleMapsAPIPresent() throws Exception {
+		mvc.perform(get("/events").accept(MediaType.TEXT_HTML))
+				.andExpect(status().isOk())
+				.andExpect(view().name("events/index"))
+				.andExpect(content().string(containsString("maps.googleapis.com/maps/api")))
+				.andExpect(content().string(containsString("id=\"map\"")));
+	}
 }
