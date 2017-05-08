@@ -227,32 +227,32 @@ public class EventsControllerWebTest extends TestParent {
 		.andExpect(view().name("events/detail"));
 	}
 
-	//@Test
+	@Test
 	public void testViewVenueName() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/venues/5").accept(MediaType.TEXT_HTML))
+		mvc.perform(MockMvcRequestBuilders.get("/venues/2").accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk()).andExpect(content().string(containsString("Stopford")))
 		.andExpect(view().name("venues/detail"));
 	}
 	
-	//@Test
+	@Test
 	public void testViewVenueCapacity() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/venues/5").accept(MediaType.TEXT_HTML))
+		mvc.perform(MockMvcRequestBuilders.get("/venues/2").accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk()).andExpect(content().string(containsString("500")))
 		.andExpect(view().name("venues/detail"));
 	}
 	
-	//@Test
+	@Test
 	public void testViewVenueAddress() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/venues/5").accept(MediaType.TEXT_HTML))
+		mvc.perform(MockMvcRequestBuilders.get("/venues/2").accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk()).andExpect(content().string(containsString("Stopford Building")))
 		.andExpect(view().name("venues/detail"));
 	}
 	
-	//@Test
+	@Test
 	public void testUpcomingEvents() throws Exception {
 		when(venue.getEvents()).thenReturn(Collections.<Event> emptyList());
 		when(venueService.findById(5)).thenReturn(venue);
-		mvc.perform(MockMvcRequestBuilders.get("/venues/5").accept(MediaType.TEXT_HTML))
+		mvc.perform(MockMvcRequestBuilders.get("/venues/2").accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk()).andExpect(content().string(containsString("Gnother Event")))
 		.andExpect(view().name("venues/detail"));
 	}
