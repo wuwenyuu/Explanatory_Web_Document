@@ -103,26 +103,29 @@ public class VenuesControllerWeb {
 			@RequestParam(value = "capacity", defaultValue = "0") int capacity, 
 			Model model) {
 		
-		Venue venue = venueService.findById(id);
-		venue.setName(name);
-		venue.setCapacity(capacity);
+		if(venueService.findById(id)!=null)
+		{	
+		  Venue venue = venueService.findById(id);
+		  venue.setName(name);
+		  venue.setCapacity(capacity);
 
 		
-		if (address.matches(".{1,299}[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}"))
-		{	
-			venue.setAddress(address);
-		}else{
-			return "redirect:/venues/{id}/update";
-		}
+		  if (address.matches(".{1,299}[A-Z]{1,2}[0-9][A-Z0-9]? [0-9][ABD-HJLNP-UW-Z]{2}"))
+		  {	
+			  venue.setAddress(address);
+		  }else{
+			  return "redirect:/venues/{id}/update";
+		  }
 		
-		venueService.save(venue);
+		  venueService.save(venue);
+	    }
 
 		return "redirect:/venues/";
 	}
 	
 
     @RequestMapping(value = "/new", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-    public String newGreetingHtml(Model model) {
+    public String newVenueHtml(Model model) {
 	  return "venues/new";
     }
 
