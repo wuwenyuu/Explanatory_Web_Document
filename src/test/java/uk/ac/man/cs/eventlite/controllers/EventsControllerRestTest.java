@@ -70,6 +70,12 @@ public class EventsControllerRestTest extends TestParent {
 		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 	
+	
+	//@Test
+	//public void getEventPageTest() throws Exception{
+		
+	//}
+	
  	@Test
  	public void testDeleteEvent() throws Exception {
  		mvc.perform(MockMvcRequestBuilders.delete("/events/1")).andExpect(status().isNoContent());
