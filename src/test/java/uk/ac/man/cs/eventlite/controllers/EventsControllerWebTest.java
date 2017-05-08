@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import uk.ac.man.cs.eventlite.TestParent;
 import uk.ac.man.cs.eventlite.dao.EventService;
@@ -62,6 +63,18 @@ public class EventsControllerWebTest extends TestParent {
 	@Test
 	public void testGetAllEventsNoTwitterConn() throws Exception {
 		mvc.perform(get("/events").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
+				.andExpect(view().name("redirect:/connect/twitter"));
+	}
+	
+	@Test
+	public void testTweetingNoConn() throws Exception {
+		mvc.perform(get("/events/tweet/1/aTweet").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+				.andExpect(view().name("events/detail"));
+	}
+	
+	@Test
+	public void testTwitterConnCheck() throws Exception {
+		mvc.perform(get("/events/twitter").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
 				.andExpect(view().name("redirect:/connect/twitter"));
 	}
 	
@@ -264,5 +277,152 @@ public class EventsControllerWebTest extends TestParent {
 				.andExpect(view().name("events/index"))
 				.andExpect(content().string(containsString("maps.googleapis.com/maps/api")))
 				.andExpect(content().string(containsString("id=\"map\"")));
+	}
+	
+	@Test
+	public void testAddAnEventHtml() throws Exception {
+ 
+		String name = "testevent";
+		String vname = "testvenue";
+		String description = "A description.";
+		String address = "12 Test Address, M15 6GH";
+		int capacity = 100;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date = cal.getTime();
+		
+		cal.set(2018, Calendar.JANUARY, 15); //Year, month and day of month
+		Date date2 = cal.getTime();
+		
+		Date etime = Time.valueOf("13:00:00");
+		Date etime2 = Time.valueOf("15:00:00");
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(capacity);
+ 		venue1.setAddress(address);
+ 		
+ 		realVenueService.save(venue1);
+ 		
+		Event eventtest1 = new Event();
+		eventtest1.setId(1);
+		eventtest1.setName("EVENT");
+		eventtest1.setVenue(venue1);
+		eventtest1.setDate(date2);
+		eventtest1.setTime(etime2);
+		
+		eventService.save(eventtest1);
+		
+		String URL = "/events/new";
+		
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("eventname", name)
+				.param("eventdate", "" + date)
+				.param("eventvenue", vname)
+				.param("eventtime", "" + etime)
+				.param("eventdescription", description)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/events/"));
+		
+	}
+    
+    @Test
+	public void testAddEventHtmlBadTime() throws Exception {
+
+		String name = "testevent";
+		String vname = "testvenue";
+		String description = "A description.";
+		String address = "12 Test Address, M15 6GH";
+		int capacity = 100;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date = cal.getTime();
+		
+		cal.set(2018, Calendar.JANUARY, 15); //Year, month and day of month
+		Date date2 = cal.getTime();
+		
+		String etime = "13:00";
+		Date etime2 = Time.valueOf("15:00:00");
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(capacity);
+ 		venue1.setAddress(address);
+ 		
+ 		realVenueService.save(venue1);
+ 		
+		Event eventtest1 = new Event();
+		eventtest1.setId(1);
+		eventtest1.setName("EVENT");
+		eventtest1.setVenue(venue1);
+		eventtest1.setDate(date2);
+		eventtest1.setTime(etime2);
+		
+		eventService.save(eventtest1);
+		
+		String URL = "/events/new";
+		
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("eventname", name)
+				.param("eventdate", "" + date)
+				.param("eventvenue", vname)
+				.param("eventtime", "" + etime)
+				.param("eventdescription", description)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/events/"));
+
+	}
+    
+    @Test
+	public void testAddEventHtmlHasPassed() throws Exception {
+
+		String name = "testevent";
+		String vname = "testvenue";
+		String description = "A description.";
+		String address = "12 Test Address, M15 6GH";
+		int capacity = 100;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2010, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date = cal.getTime();
+		
+		cal.set(2010, Calendar.JANUARY, 15); //Year, month and day of month
+		Date date2 = cal.getTime();
+		
+		String etime = "01:00:00";
+		Date etime2 = Time.valueOf("02:00:00");
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(capacity);
+ 		venue1.setAddress(address);
+ 		
+ 		realVenueService.save(venue1);
+ 		
+		Event eventtest1 = new Event();
+		eventtest1.setId(1);
+		eventtest1.setName("EVENT");
+		eventtest1.setVenue(venue1);
+		eventtest1.setDate(date2);
+		eventtest1.setTime(etime2);
+		
+		eventService.save(eventtest1);
+		
+		String URL = "/events/new";
+		
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("eventname", name)
+				.param("eventdate", "" + date)
+				.param("eventvenue", vname)
+				.param("eventtime", "" + etime)
+				.param("eventdescription", description)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/events/new"));
+
 	}
 }
