@@ -202,22 +202,38 @@ public class VenuesControllerWebTest extends TestParent {
 		.andExpect(view().name("venues/new"));
 	}
 	
-    @Test
+	@Test
 	public void testAddVenueHtml() throws Exception {
-
+ 
 		String name = "testaddvenue";
 		String address = "12 Test Address, M15 6GH";
 		int capacity = 100;
+		
 		String URL = "/venues/new";
 		
-		ArgumentCaptor<Venue> argument = ArgumentCaptor.forClass(Venue.class);
 		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("venuename", name)
 				.param("venueaddress", address)
 				.param("venuecapacity", ""+capacity)
 				.accept(MediaType.TEXT_HTML))
-		        .andExpect(view().name("redirect:/venues/"));
-		verify(venueService, times(1)).save(argument.capture());
-	
-    }
+				.andExpect(view().name("redirect:/venues/"));
+	}
+    
+    @Test
+	public void testAddVenueHtmlBAdAddress() throws Exception {
+
+		String name = "testaddvenue";
+		String address = "1232";
+		int capacity = 100;
+		
+		String URL = "/venues/new";
+		
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("venuename", name)
+				.param("venueaddress", address)
+				.param("venuecapacity", ""+capacity)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/venues/new"));
+
+	}
 }
