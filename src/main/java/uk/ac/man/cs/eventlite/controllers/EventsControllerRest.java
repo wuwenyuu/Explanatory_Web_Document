@@ -41,6 +41,7 @@ public class EventsControllerRest {
 		Venue location = eventService.findById(id).getVenue();
 		example.addAttribute("event", eventService.findById(id));
 		example.addAttribute("path_to_event", path.toUri() + "events/" + id);
+		
 		example.addAttribute("venue", location);
 		example.addAttribute("path_to_venue", path.toUri() + "venues/" + location.getId());
 		
