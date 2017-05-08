@@ -47,6 +47,38 @@ public class VenueServiceTest extends TestParent {
 		assertTrue("v1 shoule be less than v2 in lexycographic order", v1.getName().compareTo(v2.getName()) < 0);
 	}
 	
+	@Test
+	public void setLatLon() {
+
+ 	    Venue venuetest = new Venue();
+ 		venuetest.setId(1);
+ 		venuetest.setName("venuetest");
+ 		venuetest.setCapacity(100);
+ 		venuetest.setLatLon(10.2342, 45.43543);
+ 		
+ 		venueService.save(venuetest);
+ 		
+ 		assertTrue(venuetest.getLat() == 10.2342);
+ 		assertTrue(venuetest.getLon() == 45.43543);
+ 		assertFalse(venuetest.hasCoords());
+	}
+	
+	@Test
+	public void getCoords() {
+
+ 	    Venue venuetest = new Venue();
+ 		venuetest.setId(1);
+ 		venuetest.setName("venuetest");
+ 		venuetest.setCapacity(100);
+ 		venuetest.setAddress("8 Redclyffe Avenue, M14 5RG");
+ 		
+ 		venueService.save(venuetest);
+ 		
+ 		double latitude = venuetest.getLat();
+ 		
+ 		assertTrue(venuetest.hasCoords());
+	}
+	
 	@Test 
  	public void deleteByIdWithEvent(){
  		
