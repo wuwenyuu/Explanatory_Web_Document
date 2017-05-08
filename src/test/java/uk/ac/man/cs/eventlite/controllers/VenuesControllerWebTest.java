@@ -9,8 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collections;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.mock.MockCreationSettings;
 import org.hamcrest.Matchers;
@@ -134,7 +136,7 @@ public class VenuesControllerWebTest extends TestParent {
 	
     @Test
 	public void updateVenueHtml() throws Exception {
- 
+
 		String name = "testvenue";
 		String address = "Richmond Road, KT2 5PL";
 		int capacity = 200;
@@ -163,6 +165,37 @@ public class VenuesControllerWebTest extends TestParent {
 		
 	}
     
+    @Test
+	public void updateVenueIncorrectAddressHtml() throws Exception {
+
+		String name = "testvenue";
+		String address = "Richmond Road";
+		int capacity = 200;
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(1000);
+ 		venue1.setAddress("3 Oxford Road");
+ 		
+ 		realVenueService.save(venue1);
+ 		
+ 		when(venueService.findById(1)).thenReturn(venue1);
+		
+		
+		mvc.perform(MockMvcRequestBuilders.post("/venues/1/update").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("name", name)
+				.param("address", address)
+				.param("capacity", "" + capacity)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/venues/{id}/update"));
+		
+		assertEquals(venue1.getName(), name);
+		assertEquals(venue1.getCapacity(), capacity);
+		assertEquals(venue1.getAddress(), "3 Oxford Road");
+		
+	}
+    
 	@Test
 	public void testGetNewVenueHtml() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/venues/new").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
@@ -171,21 +204,20 @@ public class VenuesControllerWebTest extends TestParent {
 	
     @Test
 	public void testAddVenueHtml() throws Exception {
- 
-    	long countBefore = venueService.count();
+
 		String name = "testaddvenue";
 		String address = "12 Test Address, M15 6GH";
 		int capacity = 100;
 		String URL = "/venues/new";
+		
+		ArgumentCaptor<Venue> argument = ArgumentCaptor.forClass(Venue.class);
 		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("venuename", name)
 				.param("venueaddress", address)
 				.param("venuecapacity", ""+capacity)
-				.accept(MediaType.TEXT_HTML));
-		long countAfter = venueService.count();
-		assertEquals(countBefore+1, countAfter);
-		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testaddvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-		.andExpect(view().name("venues/index"));
-	}
+				.accept(MediaType.TEXT_HTML))
+		        .andExpect(view().name("redirect:/venues/"));
+		verify(venueService, times(1)).save(argument.capture());
 	
+    }
 }
