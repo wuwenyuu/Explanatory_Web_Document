@@ -29,6 +29,7 @@ public class VenuesControllerRest {
 	public String getAllVenues(Model model, UriComponentsBuilder a) {
 		
 		model.addAttribute("self", a.path("/venues").build().toUri());
+		model.addAttribute("selfvenue", a.path("/venues").build().toUri());
 		model.addAttribute("venues", venueService.findAllByOrderByNameAsc());
 
 		return "venues/index";
@@ -37,7 +38,10 @@ public class VenuesControllerRest {
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public String searchAnVenues(Model model, UriComponentsBuilder a, @RequestParam(value="searchVenue", required=false) String name) {
 
+		UriComponentsBuilder b = (UriComponentsBuilder) a.clone();
+
 		model.addAttribute("self", a.path("/venues/search").build().toUri());
+		model.addAttribute("selfvenue", b.path("/venues").build().toUri());
 		model.addAttribute("venues", venueService.findAllByNameContainingIgnoreCaseOrderByNameAsc(name));
 
 		return "venues/index";

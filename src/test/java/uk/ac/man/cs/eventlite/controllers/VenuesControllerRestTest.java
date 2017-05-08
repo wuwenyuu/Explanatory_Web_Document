@@ -44,15 +44,19 @@ public class VenuesControllerRestTest extends TestParent {
 	public void testSearchAVenue() throws Exception {
 		
 		Venue venue1 = new Venue();
- 		venue1.setName("Kilburn");
+ 		venue1.setName("fdfsdafda");
  		venue1.setCapacity(1000);
  		venueService.save(venue1);
 		
-		mvc.perform(get("/venues/search?searchVenue=Kilburn").accept(MediaType.APPLICATION_JSON))
+		mvc.perform(get("/venues/search?searchVenue=fdfsdafda").accept(MediaType.APPLICATION_JSON))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.title", equalTo("EventLite Venues")))
 			.andExpect(jsonPath("$._self", equalTo("http://localhost/venues/search")))
-			.andExpect(jsonPath("$.venues[0].name", equalTo(venue1.getName())));
+			.andExpect(jsonPath("$.venues[0].id", equalTo((int)venue1.getId())))
+			.andExpect(jsonPath("$.venues[0].name", equalTo(venue1.getName())))
+			.andExpect(jsonPath("$.venues[0].capacity", equalTo(venue1.getCapacity())))
+			.andExpect(jsonPath("$.venues[0]._self", equalTo("http://localhost/venues/" + venue1.getId())))
+			.andExpect(jsonPath("$.venues[0].events", equalTo("http://localhost/venues/" + venue1.getId() + "/events")));
 		
 	}
 }
