@@ -165,6 +165,37 @@ public class VenuesControllerWebTest extends TestParent {
 		
 	}
     
+    @Test
+	public void updateVenueIncorrectAddressHtml() throws Exception {
+
+		String name = "testvenue";
+		String address = "Richmond Road";
+		int capacity = 200;
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(1000);
+ 		venue1.setAddress("3 Oxford Road");
+ 		
+ 		realVenueService.save(venue1);
+ 		
+ 		when(venueService.findById(1)).thenReturn(venue1);
+		
+		
+		mvc.perform(MockMvcRequestBuilders.post("/venues/1/update").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("name", name)
+				.param("address", address)
+				.param("capacity", "" + capacity)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/venues/{id}/update"));
+		
+		assertEquals(venue1.getName(), name);
+		assertEquals(venue1.getCapacity(), capacity);
+		assertEquals(venue1.getAddress(), "3 Oxford Road");
+		
+	}
+    
 	@Test
 	public void testGetNewVenueHtml() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/venues/new").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
