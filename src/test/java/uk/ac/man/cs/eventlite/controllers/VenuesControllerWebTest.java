@@ -9,8 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Collections;
 
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.mock.MockCreationSettings;
 import org.hamcrest.Matchers;
@@ -134,16 +136,25 @@ public class VenuesControllerWebTest extends TestParent {
 	
     @Test
 	public void updateVenueHtml() throws Exception {
- 
-    	long countBefore = eventService.count();
+    	//long countBefore = eventService.count();
 		String name = "testvenue";
 		String address = "Richmond Road, KT2 5PL";
 		int capacity = 200;
-		mvc.perform(MockMvcRequestBuilders.post(name, address, capacity).accept(MediaType.TEXT_HTML));
-		long countAfter = eventService.count();
-		assertEquals(countAfter, countBefore);
-		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-		.andExpect(view().name("venues/index"));
+		String URL = "/venues/34/update";
+    	ArgumentCaptor<Venue> argument = ArgumentCaptor.forClass(Venue.class);
+    	//when(venue.getEvents()).thenReturn(Collections.<Event> emptyList());
+    	//when(venueService.delete(1)).thenReturn(true);
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("name", name)
+				.param("address", address)
+				.param("capacity", ""+capacity)
+				.accept(MediaType.TEXT_HTML))
+	            .andExpect(view().name("redirect:/venues/"));
+		verify(venueService, atMost(1)).save(argument.capture());
+		//long countAfter = eventService.count();
+		//assertEquals(countAfter, countBefore);
+		//mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+		//.andExpect(view().name("venues/index"));
 		
 	}
 	@Test
@@ -154,21 +165,20 @@ public class VenuesControllerWebTest extends TestParent {
 	
     @Test
 	public void testAddVenueHtml() throws Exception {
- 
-    	long countBefore = venueService.count();
+
 		String name = "testaddvenue";
 		String address = "12 Test Address, M15 6GH";
 		int capacity = 100;
 		String URL = "/venues/new";
+		
+		ArgumentCaptor<Venue> argument = ArgumentCaptor.forClass(Venue.class);
 		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("venuename", name)
 				.param("venueaddress", address)
 				.param("venuecapacity", ""+capacity)
-				.accept(MediaType.TEXT_HTML));
-		long countAfter = venueService.count();
-		assertEquals(countBefore+1, countAfter);
-		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testaddvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-		.andExpect(view().name("venues/index"));
-	}
+				.accept(MediaType.TEXT_HTML))
+		        .andExpect(view().name("redirect:/venues/"));
+		verify(venueService, times(1)).save(argument.capture());
 	
+    }
 }

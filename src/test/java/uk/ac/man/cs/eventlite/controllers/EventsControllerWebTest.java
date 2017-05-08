@@ -96,7 +96,7 @@ public class EventsControllerWebTest extends TestParent {
 	}
 	
     @Test
-	public void updateVenueHtml() throws Exception {
+	public void testUpdateEventHtml() throws Exception {
  
     	long countBefore = eventService.count();
 		String name = "testevent";
