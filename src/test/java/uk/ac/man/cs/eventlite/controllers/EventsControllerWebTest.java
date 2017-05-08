@@ -279,6 +279,60 @@ public class EventsControllerWebTest extends TestParent {
 				.andExpect(content().string(containsString("id=\"map\"")));
 	}
 	
+	@Ignore
+	@Test
+	public void testUpdateAnEventHtml() throws Exception {
+ 
+		String name = "testevent";
+		String vname = "Kilburn";
+		String description = "A description.";
+		String address = "12 Test Address, M15 6GH";
+		int capacity = 100;
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date = cal.getTime();
+		
+		cal.set(2018, Calendar.JANUARY, 15); //Year, month and day of month
+		Date date2 = cal.getTime();
+		
+		Date etime = Time.valueOf("13:00:00");
+		Date etime2 = Time.valueOf("15:00:00");
+		
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(capacity);
+ 		venue1.setAddress(address);
+ 		
+ 		realVenueService.save(venue1);
+ 		
+		Event eventtest1 = new Event();
+		eventtest1.setId(1);
+		eventtest1.setName("EVENT");
+		eventtest1.setVenue(venue1);
+		eventtest1.setDate(date2);
+		eventtest1.setTime(etime2);
+		
+		eventService.save(eventtest1);
+		
+		when(venueService.findOneByName("Kilburn")).thenReturn(venue1);
+		
+		String URL = "/events/1/update";
+		
+		mvc.perform(MockMvcRequestBuilders.post(URL).contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("eventname", name)
+				.param("eventvenue", vname)
+				.param("eventdate", ""+date)
+				.param("eventdescription", description)
+				.param("eventtime", ""+etime)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/events/"));
+		
+	}
+	
+	
 	@Test
 	public void testAddAnEventHtml() throws Exception {
  

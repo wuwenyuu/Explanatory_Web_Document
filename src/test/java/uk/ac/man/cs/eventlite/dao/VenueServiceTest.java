@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -46,6 +47,58 @@ public class VenueServiceTest extends TestParent {
 		assertTrue("v1 shoule be less than v2 in lexycographic order", v1.getName().compareTo(v2.getName()) < 0);
 	}
 	
+	@Test 
+ 	public void deleteByIdWithEvent(){
+ 		
+ 		
+ 		Venue venue1 = new Venue();
+  		venue1.setId(1);
+  		venue1.setName("Kilburn");
+  		venue1.setCapacity(1000);
+  		
+  		venueService.save(venue1);
+  		
+ 		Event eventtest = new Event();
+ 		eventtest.setId(3);
+ 		eventtest.setName("testevent");
+ 		eventtest.setVenue(venue1);
+ 		eventtest.setDate(null);
+ 		
+ 		
+ 		eventService.save(eventtest);
+ 		
+ 		long count = venueService.count();
+ 		count--;
+ 		
+ 		venueService.delete(1);
+ 		
+ 		List<Venue> venues = (List<Venue>) venueService.findAll();
+ 
+ 		assertEqual(count, (long) venues.size());
+ 	}
+	
+	@Test 
+ 	public void deleteByIdNoEvents(){
+ 		
+ 		
+ 		Venue venue1 = new Venue();
+  		venue1.setId(1);
+  		venue1.setName("Kilburn");
+  		venue1.setCapacity(1000);
+  		
+  		venueService.save(venue1);
+  		
+		
+ 		long count = venueService.count();
+
+
+ 		venueService.delete(1);
+ 		
+ 		List<Venue> venues = (List<Venue>) venueService.findAll();
+ 
+ 		assertEqual(count, (long) venues.size());
+ 	}
+	
  	@Test 
 	public void save(){
  		
@@ -64,7 +117,6 @@ public class VenueServiceTest extends TestParent {
  		assertEqual(count, (long) venues.size());
  	}
  	
-	
 	@Test
 	public void findOneByName() {
 		String name = "venueTest";

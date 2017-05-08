@@ -13,6 +13,7 @@ import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
 import com.google.maps.model.GeocodingResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -38,6 +39,7 @@ public class Venue {
 	  
 	public Venue() { 
 		coordsSet = false;
+		events = new ArrayList<Event>();
 	}
 	
 	@JsonIgnore
