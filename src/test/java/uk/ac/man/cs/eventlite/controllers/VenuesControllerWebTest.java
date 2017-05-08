@@ -135,17 +135,34 @@ public class VenuesControllerWebTest extends TestParent {
     @Test
 	public void updateVenueHtml() throws Exception {
  
-    	long countBefore = eventService.count();
 		String name = "testvenue";
 		String address = "Richmond Road, KT2 5PL";
 		int capacity = 200;
-		mvc.perform(MockMvcRequestBuilders.post(name, address, capacity).accept(MediaType.TEXT_HTML));
-		long countAfter = eventService.count();
-		assertEquals(countAfter, countBefore);
-		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=testvenue").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-		.andExpect(view().name("venues/index"));
+		
+		Venue venue1 = new Venue();
+ 		venue1.setId(1);
+ 		venue1.setName("Kilburn");
+ 		venue1.setCapacity(1000);
+ 		venue1.setAddress("3 Oxford Road");
+ 		
+ 		realVenueService.save(venue1);
+ 		
+ 		when(venueService.findById(1)).thenReturn(venue1);
+		
+		
+		mvc.perform(MockMvcRequestBuilders.post("/venues/1/update").contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("name", name)
+				.param("address", address)
+				.param("capacity", "" + capacity)
+				.accept(MediaType.TEXT_HTML))
+				.andExpect(view().name("redirect:/venues/"));
+		
+		assertEquals(venue1.getName(), name);
+		assertEquals(venue1.getCapacity(), capacity);
+		assertEquals(venue1.getAddress(), address);
 		
 	}
+    
 	@Test
 	public void testGetNewVenueHtml() throws Exception {
 		mvc.perform(MockMvcRequestBuilders.get("/venues/new").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
