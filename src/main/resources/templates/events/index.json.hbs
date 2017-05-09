@@ -1,0 +1,19 @@
+{
+	"title": "EventLite Events",
+	"_self": "{{self_link}}",
+{{=<% %>=}} 	"events": [
+ 	{<%#events%><%#unless @first%>{<%/unless%>
+    		"id": <%id%>,
+    		"name": "<%name%>",
+    		"date": "<%date%>",
+    		"venue": {
+    			"id": <%venue.id%>,
+    			"name": "<%venue.name%>",
+    			"capacity": <%venue.capacity%>,
+    			"_self": "http://localhost/venues/<%venue.id%>"
+    		}
+ 		<%#unless @last%>}, 
+ 		<%/unless%><%/events%>}
+ 	]
+}
+}

@@ -3,6 +3,15 @@ package uk.ac.man.cs.eventlite.controllers;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.List;
+import java.util.Date;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +39,33 @@ public class EventsControllerRestTest extends TestParent {
 
 	@Test
 	public void testGetAllEvents() throws Exception {
-		mvc.perform(get("/events").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
+		mvc.perform(get("/events").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+						.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+						.andExpect(jsonPath("$.title", equalTo("EventLite Events")))
+						.andExpect(jsonPath("$._self", equalTo("http://localhost/events")))
+						.andExpect(model().attributeExists("events"));
+	}
+	
+	@Test
+	public void testEventsList() throws Exception {
+		List<Event> events = (List<Event>) eventService.findAll();
+		for (int i = 0; i < events.size(); i++)
+		{
+			int eventId = (int) events.get(i).getId();
+			String eventName = events.get(i).getName();
+			Date eventDate = events.get(i).getDate();
+			Venue venue = events.get(i).getVenue();
+			mvc.perform(get("/events").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+					.andExpect(jsonPath("$.events[*].id", hasItem(eventId)))
+					.andExpect(jsonPath("$.events[*].name", hasItem(eventName)))
+					.andExpect(jsonPath("$.events[*].date", hasItem(eventDate.toString())))
+					.andExpect(jsonPath("$.events[*].venue.id", hasItem((int) venue.getId())))
+					.andExpect(jsonPath("$.events[*].venue.name", hasItem(venue.getName())))
+					.andExpect(jsonPath("$.events[*].venue.capacity", hasItem(venue.getCapacity())))
+					.andExpect(jsonPath("$.events[*].venue._self", hasItem("http://localhost/venues/" + (int) venue.getId())));
+//					.andExpect(jsonPath("$.events[*]._self", hasItem("http://localhost/events/" + eventId)));
+		}
+		
 	}
 	
 	@Test

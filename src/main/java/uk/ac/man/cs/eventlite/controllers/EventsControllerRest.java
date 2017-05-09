@@ -5,17 +5,21 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.entities.Event;
 
-@RestController
+@Controller
 @RequestMapping("/events")
 public class EventsControllerRest {
 
@@ -23,9 +27,17 @@ public class EventsControllerRest {
 	private EventService eventService;
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-	public HttpEntity<Iterable<Event>> getAllEvents() {
+	public String getAllEvents(Model model, UriComponentsBuilder b, UriComponentsBuilder c) {
 
-		return new ResponseEntity<Iterable<Event>>(eventService.findAllByOrderByDateAsc(), HttpStatus.OK);
+		UriComponents eventslink = b.path("/events").build();		
+		model.addAttribute("self_link", eventslink.toUri());
+		
+		UriComponents venueslink = b.path("/venues").build();
+		model.addAttribute("venue_self_link", venueslink.toUri());
+		
+		model.addAttribute("events", eventService.findAll());
+		
+		return "events/index";
 	}
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
