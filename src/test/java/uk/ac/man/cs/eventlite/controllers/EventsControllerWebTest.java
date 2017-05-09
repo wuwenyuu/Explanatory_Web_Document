@@ -101,22 +101,6 @@ public class EventsControllerWebTest extends TestParent {
 		
 	}
 
-    @Test
-	public void testUpdateEventHtml() throws Exception {
- 
-    	long countBefore = eventService.count();
-		String name = "testevent";
-		String venuename = "Richmond Road, KT2 5PL";
-		Date date = null;
-		String description = "testdescription";
-		Date time = null;
-		mvc.perform(MockMvcRequestBuilders.post(name, venuename, date, description, time).accept(MediaType.TEXT_HTML));
-		long countAfter = eventService.count();
-		assertEquals(countAfter, countBefore);
-		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=testevent").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-		.andExpect(view().name("events/index"));	
-	}
-	
 	@Test
 	public void testSearchAnEvent() throws Exception {
 		
