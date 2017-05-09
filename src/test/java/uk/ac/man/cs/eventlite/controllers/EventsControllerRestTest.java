@@ -2,6 +2,10 @@ package uk.ac.man.cs.eventlite.controllers;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.equalTo;
+
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,10 +75,33 @@ public class EventsControllerRestTest extends TestParent {
 	}
 	
 	
-	//@Test
-	//public void getEventPageTest() throws Exception{
+	@Test
+	public void getEventPageTest() throws Exception{
+		Venue location = new Venue();
 		
-	//}
+		location.setName("Rock'a'Fella");
+		location.setAddress("21 Jump Street");
+		location.setCapacity(1500);
+		location.setId(911);
+		
+		Event event = new Event();
+		event.setName("The After Party");
+		event.setVenue(location);
+		event.setDate(event.getDate());
+		event.setTime(event.getTime());
+		
+		
+		mvc.perform(get("/events/" + location.getId()).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+		.andExpect(jsonPath("$.title", equalTo("The After Party")))
+		.andExpect(jsonPath("$.path_to_event", equalTo("http://localhost/events/" + event.getId())))
+		.andExpect(jsonPath("$.id", equalTo((int) location.getId())))
+		.andExpect(jsonPath("$.date", equalTo(event.getDate().toString())))
+		.andExpect(jsonPath("$.name", equalTo("The After Party")))
+		.andExpect(jsonPath("venue.id", equalTo("Rock'a'Fella")))
+		.andExpect(jsonPath("venue.name", equalTo(1500)))
+		.andExpect(jsonPath("$.path_to_venue", equalTo("http://localhost/venues/" + location.getId())));
+	}
 	
  	@Test
  	public void testDeleteEvent() throws Exception {

@@ -24,4 +24,5 @@ public class HomePageTest extends TestParent {
 	public void getJsonRoot() throws Exception {
 		mvc.perform(get("/").accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
+	
 }
