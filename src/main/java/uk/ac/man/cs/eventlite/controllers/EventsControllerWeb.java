@@ -152,7 +152,7 @@ public class EventsControllerWeb {
 	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
-	public String createEventFromForm(@PathVariable("id") long id,
+	public String updateEventFromForm(@PathVariable("id") long id,
 			@RequestParam(value = "name", defaultValue = "0") String name,
 			@RequestParam(value = "venuename", defaultValue = "0") String venuename,	
 			@RequestParam (value="date")@DateTimeFormat(pattern="yyyy-MM-dd") Date date, 

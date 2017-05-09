@@ -97,7 +97,7 @@ public class VenuesControllerWeb {
 	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE, produces = {
 			MediaType.TEXT_HTML_VALUE })
-	public String createVenueFromForm(@PathVariable("id") long id,
+	public String updateVenueFromForm(@PathVariable("id") long id,
 			@RequestParam(value = "name", defaultValue = "0") String name,
 			@RequestParam(value = "address", defaultValue = "empty") String address, 
 			@RequestParam(value = "capacity", defaultValue = "0") int capacity, 
