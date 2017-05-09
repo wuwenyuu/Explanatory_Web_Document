@@ -63,7 +63,6 @@ public class EventsControllerRestTest extends TestParent {
 					.andExpect(jsonPath("$.events[*].venue.name", hasItem(venue.getName())))
 					.andExpect(jsonPath("$.events[*].venue.capacity", hasItem(venue.getCapacity())))
 					.andExpect(jsonPath("$.events[*].venue._self", hasItem("http://localhost/venues/" + (int) venue.getId())));
-//					.andExpect(jsonPath("$.events[*]._self", hasItem("http://localhost/events/" + eventId)));
 		}
 		
 	}
