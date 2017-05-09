@@ -5,15 +5,19 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.entities.Event;
+import uk.ac.man.cs.eventlite.entities.Venue;
 
 @RestController
 @RequestMapping("/events")
@@ -26,6 +30,21 @@ public class EventsControllerRest {
 	public HttpEntity<Iterable<Event>> getAllEvents() {
 
 		return new ResponseEntity<Iterable<Event>>(eventService.findAllByOrderByDateAsc(), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+	public String eventGet (@PathVariable("id") long id, Model example, UriComponentsBuilder comp) {
+
+		UriComponents path = comp.path("/").build();
+		Venue location = eventService.findById(id).getVenue();
+		example.addAttribute("event", eventService.findById(id));
+		example.addAttribute("self_link", path.toUri() + "events/" + id);
+		
+		example.addAttribute("venue", location);
+		example.addAttribute("self_link_venue", path.toUri() + "venues/" + location.getId());
+		
+		return "event";
+				
 	}
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
