@@ -137,6 +137,8 @@ public class EventsControllerWeb {
 			else
 				futureEvents.add(event);
 		}
+		List<Tweet> tweets = twitter.timelineOperations().getUserTimeline(5);
+		model.addAttribute("AllTweets", tweets);
 		
 		model.addAttribute("pastEvents", pastEvents);
 		model.addAttribute("futureEvents", futureEvents);
