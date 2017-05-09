@@ -40,6 +40,19 @@ public class EventsControllerRest {
 		return "events/index";
 	}
 	
+	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+ 	public String getAnEvent(@PathVariable("id") long id, Model model, UriComponentsBuilder b, UriComponentsBuilder c) {
+	
+		Event event = eventService.findById(id);
+		UriComponents link = b.path("/events/").build();		
+		model.addAttribute("self_link", link.toUri());
+		UriComponents venueLink = c.path("/venues/").build();
+		model.addAttribute("venue_link", venueLink.toUri());
+		model.addAttribute("event", event);		
+		return "events/detail";
+		
+ 		}
+	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
 	public HttpEntity<Iterable<Event>> searchAnEvents(@RequestParam(value="searchEvent", required=false) String name) {
 
