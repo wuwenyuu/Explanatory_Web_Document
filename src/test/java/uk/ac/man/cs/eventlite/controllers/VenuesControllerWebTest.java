@@ -148,10 +148,8 @@ public class VenuesControllerWebTest extends TestParent {
  		venue1.setAddress("3 Oxford Road");
  		
  		realVenueService.save(venue1);
- 		
+
  		when(venueService.findById(1)).thenReturn(venue1);
-		
-		
 		mvc.perform(MockMvcRequestBuilders.post("/venues/1/update").contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("name", name)
 				.param("address", address)
