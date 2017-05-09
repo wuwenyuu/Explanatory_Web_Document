@@ -64,11 +64,11 @@ public class EventsControllerWebTest extends TestParent {
 	@Mock
 	private Event event;
 	
-	//@Before
-	//public void setup() {
-		//MockitoAnnotations.initMocks(this);
-		//mvc = MockMvcBuilders.standaloneSetup(eventController).build();
-	//}
+//	@Before
+//	public void setup() {
+//		MockitoAnnotations.initMocks(this);
+//		mvc = MockMvcBuilders.standaloneSetup(eventController).build();
+//	}
 
 	@Test
 	public void testGetAllEventsNoTwitterConn() throws Exception {
@@ -100,7 +100,7 @@ public class EventsControllerWebTest extends TestParent {
 		mvc.perform(get("/events/34/update").accept(MediaType.TEXT_HTML)).andExpect(status().isOk()).andExpect(view().name("events/update"));
 		
 	}
-
+	
 	@Test
 	public void testSearchAnEvent() throws Exception {
 		
@@ -116,7 +116,7 @@ public class EventsControllerWebTest extends TestParent {
 		Date time2 = Time.valueOf("00:00:00");
 		
 		Venue venue1 = new Venue();
- 		venue1.setId(1);
+ 		//venue1.setId(1);
  		venue1.setName("Kilburn");
  		venue1.setCapacity(1000);
  		venue1.setAddress("Oxford Road");
@@ -124,8 +124,8 @@ public class EventsControllerWebTest extends TestParent {
  		realVenueService.save(venue1);
  		
 		Event eventtest1 = new Event();
-		eventtest1.setId(3);
-		eventtest1.setName("testevent");
+		//eventtest1.setId(3);
+		eventtest1.setName("teste");
 		eventtest1.setVenue(venue1);
 		eventtest1.setDate(date1);
 		eventtest1.setTime(time1);
@@ -133,7 +133,7 @@ public class EventsControllerWebTest extends TestParent {
 		eventService.save(eventtest1);
 		
 		Event eventtest2 = new Event();
-		eventtest2.setId(2);
+		//eventtest2.setId(2);
 		eventtest2.setName("testevent");
 		eventtest2.setVenue(venue1);
 		eventtest2.setDate(date2);
@@ -143,34 +143,6 @@ public class EventsControllerWebTest extends TestParent {
 		
 		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("events/index"));
-	}
-	public void testSearchAVenue() throws Exception {
-		Venue venue1 = new Venue();
- 		venue1.setId(1);
- 		venue1.setName("Kilburn");
- 		venue1.setCapacity(1000);
- 		venue1.setAddress("Oxford Road");
- 		
- 		venueService.save(venue1);
- 		
- 		Venue venue2 = new Venue();
- 		venue2.setId(2);
- 		venue2.setName("Kilners");
- 		venue2.setCapacity(1000);
- 		venue2.setAddress("Oxford Road");
- 		
- 		venueService.save(venue2);
- 		
- 		Venue venue3 = new Venue();
- 		venue3.setId(3);
- 		venue3.setName("kilkil");
- 		venue3.setCapacity(1000);
- 		venue3.setAddress("Oxford Road");
- 		
- 		venueService.save(venue3);
-		
-		mvc.perform(MockMvcRequestBuilders.get("/venues/search?searchVenue=kil").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
-				.andExpect(view().name("venues/index"));
 	}
  	
  	@Test

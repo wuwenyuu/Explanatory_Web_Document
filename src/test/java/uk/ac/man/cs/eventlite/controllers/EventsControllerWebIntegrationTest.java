@@ -54,7 +54,6 @@ public class EventsControllerWebIntegrationTest extends TestParent {
 		get("/events/twitter");
 	}
 	
-	@Ignore
 	@Test
 	public void testGetSearchEvent() {
 		get("/events/search?searchEvent=ev");

@@ -43,6 +43,12 @@ public class VenuesControllerRestIntegrationTest extends TestParent {
 	public void testGetAllEvents() {
 		get("/venues");
 	}
+	
+	@Test
+    public void testDeleteEvent() {
+        ResponseEntity<String> response = template.exchange("/venues/1", HttpMethod.DELETE, httpEntity, String.class);
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.NO_CONTENT));
+    }
 
 	private void get(String url) {
 		ResponseEntity<String> response = template.exchange(url, HttpMethod.GET, httpEntity, String.class);
