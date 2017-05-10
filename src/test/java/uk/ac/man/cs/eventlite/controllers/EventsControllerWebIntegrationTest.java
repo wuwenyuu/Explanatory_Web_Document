@@ -50,11 +50,6 @@ public class EventsControllerWebIntegrationTest extends TestParent {
 	}
 	
 	@Test
-	public void testGetTwitter() {
-		get("/events/twitter");
-	}
-	
-	@Test
 	public void testGetSearchEvent() {
 		get("/events/search?searchEvent=ev");
 	}

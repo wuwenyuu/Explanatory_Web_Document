@@ -71,23 +71,16 @@ public class EventsControllerWebTest extends TestParent {
 //		mvc = MockMvcBuilders.standaloneSetup(eventController).build();
 	}
 
-	@Ignore
 	@Test
 	public void testGetAllEventsNoTwitterConn() throws Exception {
-		mvc.perform(get("/events").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
-				.andExpect(view().name("redirect:/connect/twitter"));
+		mvc.perform(get("/events").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
+				.andExpect(view().name("events/index"));
 	}
 	
 	@Test
 	public void testTweetingNoConn() throws Exception {
 		mvc.perform(get("/events/tweet/1/aTweet").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("events/detail"));
-	}
-	
-	@Test
-	public void testTwitterConnCheck() throws Exception {
-		mvc.perform(get("/events/twitter").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
-				.andExpect(view().name("redirect:/connect/twitter"));
 	}
 	
 	@Test

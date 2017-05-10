@@ -67,10 +67,6 @@ public class EventsControllerWeb {
     @RequestMapping(value="/twitter",method=RequestMethod.GET)
     public String connectTwitterTweet( @RequestParam(value = "eventId", required=false) Long id,
     		@RequestParam(value = "tweet", required=false) String tweet, Model model) {
-    	
-        if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-            return "redirect:/connect/twitter";
-        }
 
         return "redirect:/events/tweet/"+id+"/"+tweet;
     }
@@ -107,10 +103,6 @@ public class EventsControllerWeb {
 
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
-		
-//		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-//	            return "redirect:/connect/twitter";
-//	        }
 
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
