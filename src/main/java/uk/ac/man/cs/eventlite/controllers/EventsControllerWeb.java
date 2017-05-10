@@ -20,6 +20,7 @@ import org.springframework.social.twitter.api.TimelineOperations;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
 import org.springframework.social.twitter.api.TwitterProfile;
+import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,8 +54,13 @@ public class EventsControllerWeb {
     private ConnectionRepository connectionRepository;
     
     @Inject
-    public EventsControllerWeb(Twitter twitter, ConnectionRepository connectionRepository){
-    	this.twitter = twitter;
+    public EventsControllerWeb(ConnectionRepository connectionRepository){
+    	this.twitter = new TwitterTemplate(
+    		"GeazZxPJS9twq9HzUyaXGQmnY",
+    		"tMbgOw5wFADISB0pes35mctqc8rZLwyfETphHbfll9syzL9mOU",
+    		"835543865272778756-WteSkkKgICWUVAM6GkPZcFVqopzEk2z",
+    		"JcujIL9O189En0OloeFRSZ4tOU4MT2PX2wrEldWGD6OUO"
+    	);
     	this.connectionRepository = connectionRepository;
     }
     
@@ -102,9 +108,9 @@ public class EventsControllerWeb {
 	@RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String getAllEvents(Model model) {
 		
-		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
-	            return "redirect:/connect/twitter";
-	        }
+//		 if (connectionRepository.findPrimaryConnection(Twitter.class) == null) {
+//	            return "redirect:/connect/twitter";
+//	        }
 
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();

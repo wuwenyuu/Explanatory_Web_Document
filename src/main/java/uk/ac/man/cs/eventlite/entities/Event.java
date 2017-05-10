@@ -2,9 +2,11 @@ package uk.ac.man.cs.eventlite.entities;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -37,6 +39,7 @@ public class Event {
 	private String description;
 	
 	@ManyToOne
+	@JoinColumn
 	private Venue venue;
 
 	public Event() {

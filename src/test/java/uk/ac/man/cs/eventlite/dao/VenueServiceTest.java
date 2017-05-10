@@ -6,7 +6,10 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.junit.Ignore;
@@ -84,29 +87,35 @@ public class VenueServiceTest extends TestParent {
 	@Test 
  	public void deleteByIdWithEvent(){
 		
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
+		Date date1 = cal.getTime();
+		Date time1 = Time.valueOf("13:00:00");
+		
  		Venue venue1 = new Venue();
-  		//venue1.setId(1);
-  		venue1.setName("Kilburn");
+  		venue1.setName("a venue called kilburn");
+  		venue1.setAddress("320 Claremont road M14 7WJ");
   		venue1.setCapacity(1000);
-  		
   		venueService.save(venue1);
   		
   		Event eventtest = new Event();
- 		//eventtest.setId(3);
  		eventtest.setName("testevent");
  		eventtest.setVenue(venue1);
- 		eventtest.setDate(null);
- 		
+ 		eventtest.setTime(time1);
+ 		eventtest.setDate(date1);
+ 		eventtest.setDescription("the long description of the event test named testevent");
  		eventService.save(eventtest);
 		
  		long count = venueService.count();
-
- 		venueService.delete(venue1.getId());
- 		count--;
  		
- 		ArrayList<Venue> venues = (ArrayList<Venue>) venueService.findAll();
- 
- 		assertEqual(count, (long) venues.size());
+ 		venueService.delete(venue1.getId());
+ 	
+ 		
+ 		//ArrayList<Venue> venues = (ArrayList<Venue>) venueService.findAll();
+ 		
+ 		
+ 		assertEqual(count, (long) venueService.count());
  	}
 	
 	@Test 
@@ -231,7 +240,7 @@ public class VenueServiceTest extends TestParent {
     public static final String BOGUS_ADDRESS = "fksjiocvmeniofijduiooijifao";
     public static final double BOGUS_LAT = 53.4807593;
     public static final double BOGUS_LON = -2.2426305;
-    @Test public void testGeocodingServiceAddressDoesntExist() {
+    @Test public void testGSADE() {
             Venue testvenue = new Venue();
             testvenue.setName("A simple test venue");
             testvenue.setCapacity(31337);
