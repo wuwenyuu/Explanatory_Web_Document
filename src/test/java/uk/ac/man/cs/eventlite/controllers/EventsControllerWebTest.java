@@ -12,6 +12,7 @@ import java.sql.Time;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import org.junit.Before;
@@ -64,12 +65,13 @@ public class EventsControllerWebTest extends TestParent {
 	@Mock
 	private Event event;
 	
-//	@Before
-//	public void setup() {
-//		MockitoAnnotations.initMocks(this);
+	@Before
+	public void setup() {
+//		MockitoAnnotations.initMocks(this);		
 //		mvc = MockMvcBuilders.standaloneSetup(eventController).build();
-//	}
+	}
 
+	@Ignore
 	@Test
 	public void testGetAllEventsNoTwitterConn() throws Exception {
 		mvc.perform(get("/events").accept(MediaType.TEXT_HTML)).andExpect(status().isFound())
@@ -144,6 +146,28 @@ public class EventsControllerWebTest extends TestParent {
 		mvc.perform(MockMvcRequestBuilders.get("/events/search?searchEvent=TEST").accept(MediaType.TEXT_HTML)).andExpect(status().isOk())
 				.andExpect(view().name("events/index"));
 	}
+	
+	@Ignore
+	@Test
+	public void testViewEventDate() throws Exception {
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(2018, Calendar.JANUARY, 10); //Year, month and day of month
+		
+		Date time1 = Time.valueOf("13:00:00");
+		Date date1 = cal.getTime();
+		
+		Event eventtest3 = new Event();
+		eventtest3.setName("this is a test event");
+		eventtest3.setDate(date1);
+		eventtest3.setTime(time1);
+		
+		eventService.save(eventtest3);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/events/" + eventtest3.getId()).accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString("2018-01-10")))
+		.andExpect(view().name("events/detail"));
+	}
  	
  	@Test
  	public void testDeleteEvent() throws Exception {
@@ -161,30 +185,39 @@ public class EventsControllerWebTest extends TestParent {
 	
 	@Test
 	public void testViewEventDescription() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/events/4?name=Concert Event").accept(MediaType.TEXT_HTML))
-		.andExpect(status().isOk()).andExpect(content().string(containsString("This is Concert")))
+		
+		Event eventtest3 = new Event();
+		eventtest3.setName("this is a test event");
+		eventtest3.setDescription("This is the description of event test 3");
+		eventService.save(eventtest3);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/events/" + eventtest3.getId()).accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString(eventtest3.getDescription())))
 		.andExpect(view().name("events/detail"));
 	}
 	
 	@Test
 	public void testViewEventName() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/events/4?name=Concert Event").accept(MediaType.TEXT_HTML))
+		Event eventtest3 = new Event();
+		eventtest3.setName("this is a test event");
+		eventtest3.setDescription("This is the description of event test 3");
+		eventService.save(eventtest3);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/events/" + eventtest3.getId()).accept(MediaType.TEXT_HTML))
 		.andExpect(status().isOk())
-		.andExpect(content().string(containsString("Concert Event")))
-		.andExpect(view().name("events/detail"));
-	}
-	
-	@Test
-	public void testViewEventDate() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/events/4?name=Concert Event").accept(MediaType.TEXT_HTML))
-		.andExpect(status().isOk()).andExpect(content().string(containsString("2018-01-10")))
+		.andExpect(content().string(containsString(eventtest3.getName())))
 		.andExpect(view().name("events/detail"));
 	}
 	
 	@Test
 	public void testViewEventVenue() throws Exception {
-		mvc.perform(MockMvcRequestBuilders.get("/events/4?name=Concert Event").accept(MediaType.TEXT_HTML))
-		.andExpect(status().isOk()).andExpect(content().string(containsString("Concert Event")))
+		
+		Event eventtest3 = new Event();
+		eventtest3.setName("this is a test event");
+		eventService.save(eventtest3);
+		
+		mvc.perform(MockMvcRequestBuilders.get("/events/" + eventtest3.getId() + "?name=Concert Event").accept(MediaType.TEXT_HTML))
+		.andExpect(status().isOk()).andExpect(content().string(containsString(eventtest3.getName())))
 		.andExpect(view().name("events/detail"));
 	}
 

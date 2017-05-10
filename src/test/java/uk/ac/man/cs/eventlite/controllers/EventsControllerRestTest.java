@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
@@ -127,6 +128,11 @@ public class EventsControllerRestTest extends TestParent {
 	
  	@Test
  	public void testDeleteEvent() throws Exception {
- 		mvc.perform(MockMvcRequestBuilders.delete("/events/4")).andExpect(status().isNoContent());
+ 		
+		Event eventtest3 = new Event();
+		eventtest3.setName("this is a test event");
+		eventService.save(eventtest3);
+ 		
+ 		mvc.perform(MockMvcRequestBuilders.delete("/events/" + eventtest3.getId())).andExpect(status().isNoContent());
  	}
 }

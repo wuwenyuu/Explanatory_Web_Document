@@ -4,6 +4,8 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,13 +51,26 @@ public class VenueServiceImpl implements VenueService {
 	
 	@Override
 	public boolean delete(long id) {
-		if(venueRepository.findById(id).getEvents().isEmpty())
-		{
-			venueRepository.delete(id);
-			return true;
-		}
-		else
+		try {
+			Venue venue = venueRepository.findById(id);
+			if(venue != null)
+			{
+				List<Event> events = venue.getEvents();
+				if (events == null) {
+					venueRepository.delete(id);
+					return true;
+				} else if (events.isEmpty()) {
+					venueRepository.delete(id);
+					return true;
+				} else {
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} catch (PersistenceException e) {
 			return false;
+		}
 	}
 	
 	@Override
