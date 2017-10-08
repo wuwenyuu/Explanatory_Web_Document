@@ -1,46 +1,53 @@
 {{#partial "content"}}
 <form action="/index" method="get" >
 
-  <div class="container">
-    <h1>EventLite</h1>
-    <p>Welcome to EventLite. See the <a href="/events">list of events</a> or <a href="/venues">list of venues</a> for more information.</p>
-  </div>
-  <h2><p>Upcoming Events:</p></h2>
+<head>
+<style>
+body {
+    background-image: url("http://wiki.dbpedia.org/sites/default/files/dbpedia_plain.png");
+}
+</style>
+</head>
+
+  <h1><p>Tell you first:</p></h1>
   
-  {{#futureEvents}}
-  <div class="panel panel-default">
-    <div>
-	    <div class="panel-heading">
-	      <h3 class="panel-title"><a href="/events/{{id}}?name={{name}}">{{name}}</a></h3>
-	    </div>
-	    <div class="panel-body">
-		  Location: <a href="/venues/{{venue.id}}">{{venue.name}}</a><br/>
-		  Time: {{time}}<br/>
-	      Date: {{date}}
-	      
-	    </div>
-    </div>
-  </div>  
-  {{/futureEvents}}
+        <div id="sidebar">
+				
+				<div class="info_blocks" id="support_information">
+				
+					<h3 class="info_block"><a href="#">Plain text</a></h3>
+					<div class="info_block" id="phishing_block">
+						<ul>
+   							 <form action="/events/twitter" method="get" >
+								<div class="input-group">
+									 <input type="hidden" class="form-control" name="eventId" placeholder="{{id}}" value="{{id}}"/>
+							 		 <input type="text" class="form-control" name="tweet" placeholder="Input text you want to search..."/>
+							 		 <div class="input-group-btn">
+									  <button type="submit" class="btn btn-default"><i class="fa fa-file-text-o" aria-hidden="true"></i></button>
+									  </div>
+							 	 </div>
+ 							 </form>
+						</ul>
+					</div> 
+					<h3 class="info_block"><a href="#">URL</a></h3>
+					<div class="info_block" id="phishing_block">
+						<ul>
+   							 <form action="/events/twitter" method="get" >
+								<div class="input-group">
+									 <input type="hidden" class="form-control" name="eventId" placeholder="{{id}}" value="{{id}}"/>
+							 		 <input type="text" class="form-control" name="tweet" placeholder="Input an URL you want to search..."/>
+							 		 <div class="input-group-btn">
+									  <button type="submit" class="btn btn-default"><i class="fa fa-link" aria-hidden="true"></i></button>
+									  </div>
+							 	 </div>
+ 							 </form>
+						</ul>
+						<p>More question please contact email:wuwenyu86@gmail.com</p>
+					</div> 
+					
+				</div>
+		</div>
   
-
-      <h2><p>Most Popular Venues:</p></h2>
- {{#topvenue}}
-  <div class="panel panel-default">
-    <div>
-	    <div class="panel-heading">
-	      <h3 class="panel-title"><a href="/venues/{{id}}?name={{name}}">{{name}}</a></h3>
-	    </div>
-	    <div class="panel-body">
-	      Address: {{address}}<br/>
-	      Capacity: {{capacity}}
-	    </div>
-    </div>
-  </div>  
-  {{/topvenue}}
-
-
-
 
 
 </form>

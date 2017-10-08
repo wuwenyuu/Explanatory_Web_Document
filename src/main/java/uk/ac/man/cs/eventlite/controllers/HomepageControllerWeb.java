@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -93,6 +94,20 @@ public class HomepageControllerWeb {
 
 		model.addAttribute("topvenue", topvenue);
 		
+		return "home/home";
+	}
+	
+    @RequestMapping(value = "/spotlight/{tweet}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String sendTweet(@PathVariable("tweet") String tweet, Model model) {
+		try{
+//			twitter.timelineOperations().updateStatus(tweet);
+//			model.addAttribute("event", eventService.findById(id));
+//			model.addAttribute("tweets", tweet);
+			
+		}catch(Exception ex){
+			System.out.println("Unsuccessful tweet!!!");
+		}
+
 		return "home/home";
 	}
 	
