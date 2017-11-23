@@ -216,7 +216,15 @@ public class HomepageControllerWebTest extends TestParent{
 						System.out.println("URI : " + eElement.getElementsByTagName("URI").item(0).getTextContent());
 						System.out.println("Description : " + eElement.getElementsByTagName("Description").item(0).getTextContent());
 						System.out.println("Refcount : " + eElement.getElementsByTagName("Refcount").item(0).getTextContent());
-
+						Event event = new Event();
+						event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
+						event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+						event.setURL(eElement.getElementsByTagName("URI").item(0).getTextContent());
+					    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+//					    AllEvents.add(event);
+//					    count++;
+//					}}
+//					model.addAttribute("AllResults",AllEvents);
 						//						NodeList nodes = eElement.getChildNodes();
 //						System.out.println("-----------------------------------");
 //						System.out.println("Classes : ");
