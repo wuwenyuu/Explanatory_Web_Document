@@ -36,6 +36,8 @@ public class Event {
 	private Date time;
 
 	private String name;
+	private String ref;
+	private String link;
 	private String description;
 	
 	@ManyToOne
@@ -95,5 +97,23 @@ public class Event {
 	
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public String getLink() {
+		return link;
+	}
+	
+	public void setLink(String link) {
+		this.link = link;
+		
+	}
+	
+	public String getRef() {
+		return ref;
+	}
+	
+	public void setRef(String ref) {
+		this.ref = ref;
+		
 	}
 }

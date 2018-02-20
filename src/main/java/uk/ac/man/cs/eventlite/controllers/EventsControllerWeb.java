@@ -4,10 +4,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.IOException;
+import java.net.URL;
 import java.sql.Time;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Status;
@@ -33,6 +38,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
@@ -71,19 +81,19 @@ public class EventsControllerWeb {
         return "redirect:/events/tweet/"+id+"/"+tweet;
     }
     
-    @RequestMapping(value = "/tweet/{id}/{tweet}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String sendTweet(@PathVariable("id") long id,
+    @RequestMapping(value = "/tweet/{tweet}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String sendTweet(
 			@PathVariable("tweet") String tweet, Model model) {
 		try{
 			twitter.timelineOperations().updateStatus(tweet);
-			model.addAttribute("event", eventService.findById(id));
+//			model.addAttribute("event", eventService.findById(id));
 			model.addAttribute("tweets", tweet);
 			
 		}catch(Exception ex){
 			System.out.println("Unsuccessful tweet!!!");
 		}
 
-		return "events/detail";
+		return "events/index";
 	}
     
 //    @RequestMapping(method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
@@ -107,7 +117,7 @@ public class EventsControllerWeb {
 		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
 		
-		List<Tweet> tweets = twitter.timelineOperations().getUserTimeline(5);
+		List<Tweet> tweets = twitter.timelineOperations().getUserTimeline(3);
 		model.addAttribute("AllTweets", tweets);
 //		tweets.get(0).getCreatedAt()
 		
@@ -118,30 +128,58 @@ public class EventsControllerWeb {
 				futureEvents.add(event);
 		}
 		
-		model.addAttribute("pastEvents", pastEvents);
-		model.addAttribute("futureEvents", futureEvents);
+//		model.addAttribute("pastEvents", pastEvents);
+//		model.addAttribute("futureEvents", futureEvents);
 		return "events/index";
 	}
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) {
+	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) throws ParserConfigurationException, SAXException, IOException {
 		
-		LinkedList<Event> futureEvents = new LinkedList<Event>();
+//		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
 		
-		for (Event event : eventService.findAllByNameContainingIgnoreCaseOrderByDateAscTimeAscNameAsc(name)) {
-			if (event.hasPassed())
-				pastEvents.add(event);
-			else
-				futureEvents.add(event);
+		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(url.openStream());
+
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("Result");
+
+		System.out.println("----------------------------");
+		System.out.println(nList.getLength());
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				Event event = new Event();
+				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
+				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
+			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+                System.out.println("--------------event-----------------");
+                System.out.println(event.getName());
+                pastEvents.add(event);
+			}
 		}
-		
+				
 		model.addAttribute("pastEvents", pastEvents);
-		model.addAttribute("futureEvents", futureEvents);
 
 		return "events/index";
-	}
-	
+	}	
 	@RequestMapping(value = "/{id}/update", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String updateEvent(@PathVariable("id") long id, Model model) {
 		model.addAttribute("events", eventService.findById(id));

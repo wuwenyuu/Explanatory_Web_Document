@@ -1,63 +1,75 @@
 	{{#partial "content"}}
-<h1><a href="/">Eventlite</a> </h1><h2> All Events</h2>
+	<head>
+	<style>
+div.container {
+    width: 100%;
+    border: 1px solid gray;
+}
 
-<form action="/events/search" method="get" >
+header, footer {
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
+}
+
+nav  {
+    border-style: solid;
+    padding: 1em;
+    overflow: hidden;
+}
+
+article {
+
+    border-style: solid;
+    padding: 1em;
+    overflow: hidden;
+}
+</style>
+</head>
+
+<Body>
+<div class="container">
+
+<header>
+   <h1><a href="/">Make Simple</a> </h1>
+
+<h2> Text</h2>
+  <form action="/events/search" method="get" >
 <div class="input-group">
-  <input type="text" class="form-control" name="searchEvent" placeholder="Search for an event ..."/>
+  <input type="text" class="form-control" name="searchEvent" placeholder="Type text here"/>
   <div class="input-group-btn">
   <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
   </div>
   </div>
 </form>
-<h2>Future events</h2>
+</header>
+<article>
+{{#if pastEvents}}
+<h2>Searching Results</h2>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><i class="fa fa-bolt"></i> Event</th>
-      <th><i class="fa fa-map-marker"></i> Venue</th>
-      <th><i class="fa fa-calendar"></i> Date</th>
-      <th><i class="fa fa-clock-o"></i> Time</th>
-      <th><i class="fa fa-pencil"></i> Update</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#futureEvents}}
-    <tr>
-      <td><a href="/events/{{id}}?name={{name}}">{{name}}</a></td>
-      <td><a href="/venues/{{venue.id}}">{{venue.name}}</a></td>
-      <td>{{date}}</td>
-      <td>{{time}}</td>
-      <!---<td>{{id}}</td>-->
-      <td><a class="btn btn-primary" role="submit" href="/events/{{id}}/update">Update</a></td>
-    </tr>
-    {{/futureEvents}}
-  </tbody>
-</table>
-<h2>Past events</h2>
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th><i class="fa fa-bolt"></i> Event</th>
-      <th><i class="fa fa-map-marker"></i> Venue</th>
-      <th><i class="fa fa-calendar"></i> Date</th>
-      <th><i class="fa fa-clock-o"></i> Time</th>
-      <th><i class="fa fa-pencil"></i> Update</th>
+      <th><i class="fa fa-bolt"></i> Results</th>
+      <th><i class="fa fa-map-marker"></i> Description</th>
+      <th> Ref</th>
+
     </tr>
   </thead>
   <tbody>
     {{#pastEvents}}
     <tr>
-      <td><a href="/events/{{id}}?name={{name}}">{{name}}</a></td>
-      <td><a href="/venues/{{venue.id}}">{{venue.name}}</a></td>
-      <td>{{date}}</td>
-      <td>{{time}}</td>
-      <!---<td>{{id}}</td>-->
-      <td><a class="btn btn-primary" role="submit" href="/events/{{id}}/update">Update</a></td>
+      <td><a href={{link}}>{{name}}</a></td>
+      <td>{{description}}</td>
+      <td>{{ref}}</td>
     </tr>
     {{/pastEvents}}
   </tbody>
 </table>
-
+{{/if}}
+</article>
+<nav>
 {{#if AllTweets}}
 
 <h2>Recent Tweets</h2>
@@ -79,10 +91,35 @@
 </table>
 
 {{/if}}
+{{#if pastEvents}}
+<h2> Expecting for your feedback </h2>
 
-<p>
-  <a class="btn btn-primary" role="button" href="/events/new">Add a new Event</a>
-</p>
+
+<p>Did this make you more understand information?</p>
+
+<p>Do you think it is easy to use?</p>
+
+<p>What functions do you expect to have from this app?</p>
+{{/if}}
+   {{#if tweets}}
+     <div class="alert alert-success">
+     Your tweet: <strong>{{tweets}}</strong> was posted!
+     </div>
+   {{/if}}
+  
+  <form action="/events/twitter" method="get" >
+	<div class="input-group">
+	 <input type="hidden" class="form-control" name="eventId" placeholder="{{id}}" value="{{id}}"/>
+	  <input type="text" class="form-control" name="tweet" placeholder="Tweet about this search ... "/>
+	  <div class="input-group-btn">
+	  <button type="submit" class="btn btn-default"><i class="fa fa-twitter" aria-hidden="true"></i></button>
+	  </div>
+	  </div>
+  </form>
+</nav>
+
+
+<footer>
     <div id="map" style="width: 100%; height: 700px;"></div>
     <script>
 
@@ -125,7 +162,7 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeo_GPzufbodkG6TI6Dd77YmbEKzbznoY&callback=initMap">
     </script>
-
+</footer>
 {{/partial}}
 
-{{> layouts/base title="EventLite events"}}
+{{> layouts/base title="Searching text"}}
