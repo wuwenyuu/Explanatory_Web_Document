@@ -2,10 +2,16 @@ package uk.ac.man.cs.eventlite.controllers;
 
 
 import java.util.ArrayList;
+import java.io.IOException;
+import java.net.URL;
 import java.sql.Time;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
@@ -17,6 +23,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
@@ -41,12 +52,53 @@ public class VenuesControllerWeb {
 	}
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String searchAVenue(@RequestParam(value="searchVenue", required=false) String name, Model model) {
+	public String searchAnURI(@RequestParam(value="searchVenue", required=false) String name, Model model) throws ParserConfigurationException, SAXException, IOException {
+		System.out.println("Keyword:"+name);
+//		LinkedList<Event> futureEvents = new LinkedList<Event>();
+		LinkedList<Event> Events = new LinkedList<Event>();
 		
-		model.addAttribute("venues", venueService.findAllByNameContainingIgnoreCaseOrderByNameAsc(name));
+		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(url.openStream());
+
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("Result");
+
+		System.out.println("----------------------------");
+		System.out.println(nList.getLength());
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				Event event = new Event();
+				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
+				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
+			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+                System.out.println("--------------event-----------------");
+                System.out.println(event.getName());
+                System.out.println(event.getDescription());
+                Events.add(event);
+			}
+		}
+				
+		model.addAttribute("Events", Events);
 
 		return "venues/index";
-	}
+	}	
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String detailedVenue(@PathVariable("id") long id , Model model) {

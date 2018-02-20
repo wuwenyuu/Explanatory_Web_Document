@@ -1,24 +1,60 @@
 {{#partial "content"}}
-<form action="/index" method="get" >
-<body background="https://upload.wikimedia.org/wikipedia/commons/thumb/7/73/DBpediaLogo.svg/1200px-DBpediaLogo.svg.png">
-  <div class="container">
-    <h1>Make Simple</h1>
-    <p>Welcome to Make Simple. Choose either <a href="/events">TEXT</a> or <a href="/venues">URI</a> for more information.</p>
+<style>
 
-  
+body {
+  background: url("http://rozdeba.com/wp-content/uploads/2017/11/simplicity.png") ;
+
+  background-size:1300px 700px;
+}
+
+div.transbox {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+
+div.transbox p {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+}
+.bottomleft {
+    position: absolute;
+    bottom: 8px;
+    left: 16px;
+    font-size: 18px;
+}
+.center {
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+</style>
+<form action="/index" method="get" >
+<body>
+
+<div class="background">
+ <div class="container">
+     <h1>Make Simple</h1>
+  <div class="center">
+  <div class="transbox">
+    <p>Welcome to Make Simple. Choose either <a href="/events">URI</a> or <a href="/venues">TEXT</a> for more information.</p>
+  </div>
+  </div>
+ <div class="bottomleft"> 
 <h2> Expecting for your feedback </h2>
 
 
-<p>Did this make you more understand information?</p>
+<p>Do this make information more understandable?</p>
 
 <p>Do you think it is easy to use?</p>
 
-<p>What functions do you expect to have from this app?</p>
-
-  </div>
-
-
-
+<p>What functions do you expect to have in this app?</p>
 
 </form>
 
@@ -37,6 +73,8 @@
 	  </div>
 	  </div>
   </form>
-
+</div>
+  </div>
+  </div>
 {{/partial}}
 {{> layouts/base title="Homepage"}}

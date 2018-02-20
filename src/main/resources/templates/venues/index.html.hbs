@@ -1,6 +1,89 @@
 {{#partial "content"}}
-<h1><a href="/">Eventlite</a> </h1><h2>All Venues</h2>
-<form action="/venues/search" method="get" >
+<head>
+<style>
+body {
+  background: url("http://rozdeba.com/wp-content/uploads/2017/11/simplicity.png") ;
+
+  background-size:1300px 700px;
+}
+div.background2 {
+  background: url("https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/3/2017/06/19152521/event-feedback.jpg") ;
+
+  background-size:1200px 200px;
+
+}
+
+
+div.transbox {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+.center {
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+
+.bottom1 {
+    position: absolute;
+    left: 3%;
+    top:45%;
+    width: 100%;
+    font-size: 18px;
+}
+.bottom2 {
+    position: absolute;
+    left: 0;
+    top: 70%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+.bottom3 {
+    position: absolute;
+    left: 1%;
+    top: 600%;
+    width: 100%;
+    font-size: 18px;
+}
+
+div.transbox th,td {
+  margin: 500%;
+  font-weight: bold;
+  color: #000000;
+}
+
+
+
+nav  {
+    border-style: solid;
+    padding: 1em;
+    overflow: hidden;
+}
+
+article {
+
+    border-style: solid;
+    padding: 1em;
+    overflow: hidden;
+}
+</style>
+</head>
+
+<Body>
+<div class="container">
+
+   <h1><a href="/">Make Simple</a> </h1>
+<div class="center">
+<div class="transbox">
+<h2> Text</h2>
+ <form action="/venues/search" method="get" >
 <div class="input-group">
   <input type="text" class="form-control" name="searchVenue" placeholder="Search for a venue ..."/>
   <div class="input-group-btn">
@@ -8,30 +91,38 @@
   </div>
   </div>
 </form>
-<h2>Venues</h2>
+
+{{#if Events}}
+<div class="bottom1">
+<h2>Searching Results</h2>
+</div>
+<div class="bottom2">
+  <div class="transbox">
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><i class="fa fa-tag"></i> Name</th>
-      <th><i class="fa fa-map-marker"></i> Address</th>
-      <th><i class="fa fa-hashtag"></i> Capacity</th>
-      <th><i class="fa fa-pencil"></i> Update</th>
+      <th><i class="fa fa-bolt"></i> Results</th>
+      <th><i class="fa fa-map-marker"></i> Description</th>
+      <th> Ref</th>
+
     </tr>
   </thead>
   <tbody>
-    {{#venues}}
+    {{#Events}}
     <tr>
-      <td><a href="/venues/{{id}}">{{name}}</a></td>
-      <td>{{address}}</td>
-      <td>{{capacity}}</td>
-      <td><a class="btn btn-primary" role="submit" href="/venues/{{id}}/update">Update</a></td>
+      <td><a href={{link}}>{{name}}</a></td>
+      <td>{{description}}</td>
+      <td>{{ref}}</td>
     </tr>
-    {{/venues}}
+    {{/Events}}
   </tbody>
 </table>
-<p>
-  <a class="btn btn-primary" role="button" href="/venues/new">Add a new venue</a>
-</p>
+</div>
+</div>
+{{/if}}
+
+
+
 {{/partial}}
 
-{{> layouts/base title="EventLite Venues"}}
+{{> layouts/base title="Searching text"}}

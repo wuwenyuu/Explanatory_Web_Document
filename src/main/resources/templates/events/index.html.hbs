@@ -1,18 +1,65 @@
-	{{#partial "content"}}
-	<head>
-	<style>
-div.container {
-    width: 100%;
-    border: 1px solid gray;
+{{#partial "content"}}
+<head>
+<style>
+body {
+  background: url("http://rozdeba.com/wp-content/uploads/2017/11/simplicity.png") ;
+
+  background-size:1300px 700px;
+}
+div.background2 {
+  background: url("https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/3/2017/06/19152521/event-feedback.jpg") ;
+
+  background-size:1200px 200px;
+
 }
 
-header, footer {
-    padding: 1em;
-    color: white;
-    background-color: black;
-    clear: left;
-    text-align: center;
+
+div.transbox {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
 }
+.center {
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+
+.bottom1 {
+    position: absolute;
+    left: 3%;
+    top:45%;
+    width: 100%;
+    font-size: 18px;
+}
+.bottom2 {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+.bottom3 {
+    position: absolute;
+    left: 3%;
+    top: 180%;
+    width: 100%;
+    font-size: 18px;
+}
+
+div.transbox th,td {
+  margin: 500%;
+  font-weight: bold;
+  color: #000000;
+}
+
+
 
 nav  {
     border-style: solid;
@@ -32,9 +79,10 @@ article {
 <Body>
 <div class="container">
 
-<header>
-   <h1><a href="/">Make Simple</a> </h1>
 
+   <h1><a href="/">Make Simple</a> </h1>
+<div class="center">
+<div class="transbox">
 <h2> Text</h2>
   <form action="/events/search" method="get" >
 <div class="input-group">
@@ -43,126 +91,39 @@ article {
   <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
   </div>
   </div>
+  </div>
+  </div>
 </form>
-</header>
-<article>
+
+
+
 {{#if pastEvents}}
+<div class="bottom1">
 <h2>Searching Results</h2>
+</div>
+<div class="bottom2">
+  <div class="transbox">
 <table class="table table-striped table-hover">
   <thead>
     <tr>
-      <th><i class="fa fa-bolt"></i> Results</th>
-      <th><i class="fa fa-map-marker"></i> Description</th>
-      <th> Ref</th>
+      <th><i class="fa fa-bolt"></i> Content</th>
 
     </tr>
   </thead>
   <tbody>
     {{#pastEvents}}
     <tr>
-      <td><a href={{link}}>{{name}}</a></td>
       <td>{{description}}</td>
-      <td>{{ref}}</td>
     </tr>
     {{/pastEvents}}
   </tbody>
 </table>
+</div>
+</div>
 {{/if}}
-</article>
-<nav>
-{{#if AllTweets}}
-
-<h2>Recent Tweets</h2>
-<table class="table table-striped table-hover">
-  <thead>
-    <tr>
-      <th><i class="fa fa-bolt"></i> Tweet</th>
-      <th><i class="fa fa-calendar"></i> Date</th>
-    </tr>
-  </thead>
-  <tbody>
-    {{#AllTweets}}
-    <tr>
-      <td> {{this.text}}</td>
-      <td> {{this.createdAt}}</td>
-    </tr>
-    {{/AllTweets}}
-  </tbody>
-</table>
-
-{{/if}}
-{{#if pastEvents}}
-<h2> Expecting for your feedback </h2>
 
 
-<p>Did this make you more understand information?</p>
 
-<p>Do you think it is easy to use?</p>
-
-<p>What functions do you expect to have from this app?</p>
-{{/if}}
-   {{#if tweets}}
-     <div class="alert alert-success">
-     Your tweet: <strong>{{tweets}}</strong> was posted!
-     </div>
-   {{/if}}
-  
-  <form action="/events/twitter" method="get" >
-	<div class="input-group">
-	 <input type="hidden" class="form-control" name="eventId" placeholder="{{id}}" value="{{id}}"/>
-	  <input type="text" class="form-control" name="tweet" placeholder="Tweet about this search ... "/>
-	  <div class="input-group-btn">
-	  <button type="submit" class="btn btn-default"><i class="fa fa-twitter" aria-hidden="true"></i></button>
-	  </div>
-	  </div>
-  </form>
-</nav>
-
-
-<footer>
-    <div id="map" style="width: 100%; height: 700px;"></div>
-    <script>
-
-      var initMap = function () {
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 14,
-          center: {lat: 53.480726, lng: -2.2426739}
-        });
-
-        // Create an array of alphabetical characters used to label the markers.
-        var labels = '0123456789';
-
-        // Add some markers to the map.
-        // Note: The code uses the JavaScript Array.prototype.map() method to
-        // create an array of markers based on a given "locations" array.
-        // The map() method here has nothing to do with the Google Maps API.
-        var markers = locations.map(function(location, i) {
-          var marker = new google.maps.Marker({
-            position: {lat: location.lat, lng: location.lng},
-            label: labels[location.id],
-            title: location.name
-          });
-          marker.addListener('click', function() {window.location.href = "/events/" + location.id;});
-          return marker
-        });
-
-        // Add a marker clusterer to manage the markers.
-        var markerCluster = new MarkerClusterer(map, markers,
-            {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
-      }
-      var locations = [
-		    {{#futureEvents}}
-		    	{id: {{id}}, name: "{{name}}", lat: {{venue.lat}}, lng: {{venue.lon}} },
-		    {{/futureEvents}}
-      ]
-    </script>
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeo_GPzufbodkG6TI6Dd77YmbEKzbznoY&callback=initMap">
-    </script>
-</footer>
 {{/partial}}
 
-{{> layouts/base title="Searching text"}}
+{{> layouts/base title="Searching url"}}
