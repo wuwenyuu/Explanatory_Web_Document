@@ -2,8 +2,11 @@ package uk.ac.man.cs.eventlite.controllers;
 
 
 import java.util.ArrayList;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Time;
 import java.util.Date;
 import java.util.LinkedList;
@@ -13,6 +16,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.MediaType;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.client.RestTemplate;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -56,43 +62,102 @@ public class VenuesControllerWeb {
 		System.out.println("Keyword:"+name);
 //		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> Events = new LinkedList<Event>();
+		String string1 = "https://www.googleapis.com/customsearch/v1?q=";
+		String string2 = "&cx=012093427881739797142%3Agfemca_eksy&imgSize=large&searchType=image&key=AIzaSyDOyxGFXb4fcoeG0P5h4eMwGjWnSAFFIrQ";
+		String jsonString = string1+name+string2;
 		
-		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(url.openStream());
+        URL website = new URL(jsonString);
+        URLConnection connection = website.openConnection();
+        BufferedReader in = new BufferedReader( new InputStreamReader(connection.getInputStream(),"UTF8"));
 
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		doc.getDocumentElement().normalize();
+        StringBuilder response = new StringBuilder();
+        String inputLine;
 
-		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+        while ((inputLine = in.readLine()) != null) 
+            response.append(inputLine);
 
-		NodeList nList = doc.getElementsByTagName("Result");
+        in.close();
 
-		System.out.println("----------------------------");
-		System.out.println(nList.getLength());
-
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-
-			Node nNode = nList.item(temp);
-
-			System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-				Element eElement = (Element) nNode;
-
-				Event event = new Event();
-				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
-				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
-				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
-			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
-                System.out.println("--------------event-----------------");
-                System.out.println(event.getName());
-                System.out.println(event.getDescription());
-                Events.add(event);
-			}
+        String jsonContent = response.toString();
+        System.out.println("================This is content of json=================");
+        System.out.println(jsonContent);
+        
+        JSONObject root = new JSONObject(jsonContent);
+        JSONArray items = root.getJSONArray("items");
+		for(int i=0;i<5;i++) {
+			Event event = new Event();
+			JSONObject eachitem = items.getJSONObject(i);
+			String link = eachitem.getString("link");
+			String title = eachitem.getString("title");
+			JSONObject image = eachitem.getJSONObject("image");
+			String context = image.getString("contextLink");
+			event.setName(link);
+			event.setDescription(title);
+			event.setLink(context);
+			System.out.println("============This is title of image============");
+			System.out.println(event.getDescription());
+			System.out.println(event.getLink());
+			Events.add(event);
+		}
+		
+		//This is json attempt
+//		RestTemplate restTemplate = new RestTemplate();
+//		String response = restTemplate.getForObject(jsonString, String.class);
+//		System.out.println(response);
+//		JSONObject result = new JSONObject(response);
+//		JSONArray sportsArray = result.getJSONArray("items");
+//		
+//		for(int i=0;i<5;i++) {
+//			JSONObject image = sportsArray.getJSONObject(i);
+//			String link = image.getString("link");
+//			event.setName(link);
+//			Events.add(event);
+//		}
+//		System.out.println("===================THis is the link of image================");
+//		System.out.println(event.getName());
+		
+		
+		
+		//this is version1
+//		URL url = new URL(jsonString);
+//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+//		DocumentBuilder db = dbf.newDocumentBuilder();
+//		Document doc = db.parse(url.openStream());
+//
+//		//optional, but recommended
+//		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+//		doc.getDocumentElement().normalize();
+//
+//		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+//
+//		NodeList nList = doc.getElementsByTagName("items");
+//
+//		System.out.println("----------------------------");
+//		System.out.println(nList.getLength());
+//
+//		for (int temp = 0; temp < nList.getLength(); temp++) {
+//
+//			Node nNode = nList.item(temp);
+//
+//			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+//
+//			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+//
+//				Element eElement = (Element) nNode;
+//				event.setName(eElement.getElementsByTagName("link").item(0).getTextContent());
+////				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+////				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
+////			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+//                System.out.println("--------------event-----------------");
+//                System.out.println(event.getName());
+//                Events.add(event);
+//			}
+//		}
+		System.out.println("=========This is the element fo events==========");
+		System.out.println(Events.getFirst().getDescription());
+		for(int i=0;i<Events.size();i++) {
+			System.out.println(i);
+			System.out.println(Events.get(i).getDescription());
 		}
 				
 		model.addAttribute("Events", Events);
