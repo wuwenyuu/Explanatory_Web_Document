@@ -1,40 +1,31 @@
 package uk.ac.man.cs.eventlite.controllers;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Time;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
-import javax.validation.Valid;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.health.Status;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.social.connect.ConnectionRepository;
-import org.springframework.social.twitter.api.CursoredList;
-import org.springframework.social.twitter.api.TimelineOperations;
 import org.springframework.social.twitter.api.Tweet;
 import org.springframework.social.twitter.api.Twitter;
-import org.springframework.social.twitter.api.TwitterProfile;
 import org.springframework.social.twitter.api.impl.TwitterTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -44,10 +35,21 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import uk.ac.man.cs.eventlite.controllers.*;
 import uk.ac.man.cs.eventlite.dao.EventService;
 import uk.ac.man.cs.eventlite.dao.VenueService;
 import uk.ac.man.cs.eventlite.entities.Event;
-import static uk.ac.man.cs.eventlite.helpers.ErrorHelpers.formErrorHelper;
+
+import edu.stanford.nlp.ie.AbstractSequenceClassifier;
+import edu.stanford.nlp.ie.crf.*;
+import edu.stanford.nlp.io.IOUtils;
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.CoreAnnotations;
+import edu.stanford.nlp.sequences.DocumentReaderAndWriter;
+import edu.stanford.nlp.util.Triple;
+
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/events")
@@ -134,103 +136,66 @@ public class EventsControllerWeb {
 	}
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) throws ParserConfigurationException, SAXException, IOException {
-		
-        NiceText niceText = new NTImpl();
-        String[] urls = new String[]{
-        		name,
-//        		"https://en.wikipedia.org/wiki/Beijing",
-//                "http://www.scientificamerican.com/article/common-parasite-could-manipulate-our-behavior/",
-//                "http://www.npr.org/2015/03/27/395593337/twist-of-fate-an-accident-brings-beautiful-symmetry-to-two-lives",
-//                "http://www.oneindia.com/sports/cricket/bangladesh-captain-speaks-on-aleem-dar-s-no-ball-error-at-world-cup-1689394.html",
-//                "http://www.chinadaily.com.cn/business/2015-03/20/content_19862174.htm",
-//                "http://www.vox.com/2015/3/16/8225977/dick-vitale-talking",
-//                "http://economictimes.indiatimes.com/news/politics-and-nation/supreme-court-extends-interim-bail-to-teesta-setalvad-and-husband-javed-anand/articleshow/46628427.cms",
-//                "http://www.theaustralian.com.au/business/latest/rba-awaits-data-before-more-easing/story-e6frg90f-1227265988415",
-//                "http://www.sfchronicle.com/crime/article/Man-shot-to-death-by-Napa-police-6134255.php",
-//                "http://www.cio.com.au/whitepaper/372445/tintri-vmstore-application-aware-storage/?type=section&arg=51236&location=rhs_featured_whitepaper",
-//                "http://www.newsday.com/business/msg-president-and-ceo-resigns-tad-smith-takes-same-roles-at-sotheby-s-1.10067686#disqus_thread",
-//                "http://www.theaustralian.com.au/business/news/asic-puts-payday-lenders-on-notice/story-e6frg906-1227265934107",
-//                "http://www.njherald.com/story/28526788/10-things-to-know-for-today",
-//                "http://www.jpost.com/International/US-Senate-leader-Obama-on-cusp-of-very-bad-deal-with-Iran-393972",
-//                "http://www.ndtv.com/karnataka-news/karnataka-governor-walks-off-during-national-anthem-745652",
-//                "http://www.aninews.in/newsdetail2/story203457/will-bounce-back-after-two-three-years-congress.html",
-//                "http://edition.cnn.com/2015/03/10/world/afghanistan-violence/index.html",
-//                "http://economictimes.indiatimes.com/news/politics-and-nation/membership-drive-bjp-turns-to-mps-mlas-for-final-push-to-make-it-worlds-largest-party/articleshow/46449753.cms",
-//                "http://www.thehindu.com/news/national/andhra-pradesh/tap-aquaculture-potential-to-full/article6943174.ece?homepage=true",
-//                "http://www.denverpost.com/ci_27602128/charles-koch-working-business-book-scheduled-october",
-//                "http://www.irishtimes.com/news/world/secretive-bilderberg-group-sets-sights-on-michael-o-leary-1.2119343",
-//                "http://www.independent.co.uk/news/uk/crime/claudia-lawrence-father-of-missing-chef-says-it-is-dreadful-people-may-have-lied-to-police--as-officers-carry-out-search-of-alleyway-10069547.html",
-//                "http://www.theaustralian.com.au/national-affairs/health/two-children-tested-for-ebola-in-melbourne-hospital/story-fn59nokw-1227239685887",
-//                "http://www.thestar.com/business/2015/02/19/oil-slump-could-dip-inflation-into-the-negative-boc.html",
-//                "http://www.reuters.com/article/2015/02/18/us-health-obesity-idUSKBN0LM2E320150218",
-//                "http://www.ndtv.com/diaspora/us-lawmaker-tulsi-gabbard-to-marry-in-april-in-vedic-ceremony-740759?pfrom=home-diaspora",
-//                "http://www.thehindu.com/news/cities/Delhi/kejriwal-seeks-services-of-sanjeev-chaturvedi/article6905600.ece?ref=topnavwidget&utm_source=topnavdd&utm_medium=topnavdropdownwidget&utm_campaign=topnavdropdown",
-//                "http://www.deccanherald.com/content/458482/karnataka-man-seen-cctv-footage.html",
-        };
-		Event event = new Event();
-        for (String url : urls) {
-            String[] t = niceText.extract(url).split("\n");
-            StringBuilder txtB = new StringBuilder();
-            for (String s : t) {
-                s = s.trim();
-                if (s.charAt(s.length() - 1) == '.') {
-                    txtB.append(s).append(" ");
-                } else {
-                    txtB.append(s).append(". ");
-                }
-            }
-            event.setDescription(txtB.toString());
-
-            System.out.println("==================================");
-        }
+	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) throws Exception {
+		LinkedList<Event> pastEvents = new LinkedList<Event>();
+		String serializedClassifier = "src/main/java/classifiers/english.all.3class.distsim.crf.ser.gz";
+		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
+		System.out.println(classifier.classifyWithInlineXML(name));
+		String text = classifier.classifyWithInlineXML(name);
+		String pattern1 = "<PERSON>";
+		String pattern2 = "</PERSON>";
+		Pattern p1 = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
+		Matcher m1 = p1.matcher(text);
+		while (m1.find()) {
+			Event event = new Event();
+		  System.out.println(m1.group(1));
+		  event.setDescription(m1.group(1));
+		  pastEvents.add(event);		  
+		}
+		String pattern3 = "<LOCATION>";
+		String pattern4 = "</LOCATION>";
+		Pattern p2 = Pattern.compile(Pattern.quote(pattern3) + "(.*?)" + Pattern.quote(pattern4));
+		Matcher m2 = p2.matcher(text);
+		while (m2.find()) {
+			Event event = new Event();
+		  System.out.println(m2.group(1));
+		  event.setDescription(m2.group(1));
+		  pastEvents.add(event);		  
+		}
+		model.addAttribute("pastEvents", pastEvents);
+		//This is from link to text
+//        NiceText niceText = new NTImpl();
+//        String[] urls = new String[]{
+//        		name,
+//        };
+//		Event event = new Event();
+//        for (String url : urls) {
+//            String[] t = niceText.extract(url).split("\n");
+//            StringBuilder txtB = new StringBuilder();
+//            for (String s : t) {
+//                s = s.trim();
+//                if (s.charAt(s.length() - 1) == '.') {
+//                    txtB.append(s).append(" ");
+//                } else {
+//                    txtB.append(s).append(". ");
+//                }
+//            }
+//            event.setDescription(txtB.toString());
+//
+//            System.out.println("==================================");
+//        }
 		
 		
 		
 		//this is from keyword to results
-		LinkedList<Event> pastEvents = new LinkedList<Event>();
-		pastEvents.add(event);
-//		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
-//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//		DocumentBuilder db = dbf.newDocumentBuilder();
-//		Document doc = db.parse(url.openStream());
+//		LinkedList<Event> pastEvents = new LinkedList<Event>();
+//		pastEvents.add(event);
 //
-//		//optional, but recommended
-//		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-//		doc.getDocumentElement().normalize();
 //
-//		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-//
-//		NodeList nList = doc.getElementsByTagName("Result");
-//
-//		System.out.println("----------------------------");
-//		System.out.println(nList.getLength());
-//
-//		for (int temp = 0; temp < nList.getLength(); temp++) {
-//
-//			Node nNode = nList.item(temp);
-//
-//			System.out.println("\nCurrent Element :" + nNode.getNodeName());
-//
-//			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//
-//				Element eElement = (Element) nNode;
-//
-//				Event event = new Event();
-//				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
-//				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
-//				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
-//			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
-//                System.out.println("--------------event-----------------");
-//                System.out.println(event.getName());
-//                Events.add(event);
-//			}
-//		}
-
-		model.addAttribute("pastEvents", pastEvents);
-		
-		System.out.println("--------------event-----------------");
-        System.out.println(event.getDescription());
+//		model.addAttribute("pastEvents", pastEvents);
+//		
+//		System.out.println("--------------event-----------------");
+//        System.out.println(event.getDescription());
 
 
 		return "events/index";
@@ -313,11 +278,51 @@ public class EventsControllerWeb {
 	}
 	
 	
- 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String detailedEvent(@PathVariable("id") long id, Model model) {
-		try{
-			model.addAttribute("event",eventService.findById(id));
-		}catch(Exception ex){}
+ 	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String detailedEvent(@PathVariable("name") String name, Model model) throws ParserConfigurationException, SAXException, IOException {
+		  
+
+		LinkedList<Event> Events = new LinkedList<Event>();
+		
+		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(url.openStream());
+
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("Result");
+
+		System.out.println("----------------------------");
+		System.out.println(nList.getLength());
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				Event event = new Event();
+				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
+				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
+			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+                System.out.println("--------------event-----------------");
+                System.out.println(event.getName());
+                System.out.println(event.getDescription());
+                Events.add(event);
+			}
+		}
+				
+		model.addAttribute("subEvents", Events);
 
 		return "events/detail";
 	}

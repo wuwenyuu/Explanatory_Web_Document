@@ -3,6 +3,7 @@ package uk.ac.man.cs.eventlite.controllers;
 
 import java.util.ArrayList;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Time;
 import java.util.Date;
@@ -13,6 +14,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.MediaType;
@@ -100,33 +102,59 @@ public class VenuesControllerWeb {
 		return "venues/index";
 	}	
 	
-	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String detailedVenue(@PathVariable("id") long id , Model model) {
-		try{
-			List<Event> allEvents = (List<Event>) eventService.findAll();
-			List<Event> upcomingEvents = new ArrayList<Event>();
-			List<Event> pastEvents = new ArrayList<Event>();
-			Date current = new Date();
-			
-			for(Event e : allEvents)
-              if(e.getVenue()!=null){
-				if(e.getVenue().getId() == id){
-					if(e.getDate().before(current)){
-						pastEvents.add(e);
-					}
-				    else{
-					  upcomingEvents.add(e);
-				    }
-			     }
-			   }
-			model.addAttribute("upcoming", upcomingEvents);
-			model.addAttribute("pastEvent", pastEvents);
-			model.addAttribute("venue", venueService.findById(id));
-//			model.addAttribute("venue",venueService.findOne(id));
-			
-		} catch(Exception ex){
-			System.out.println("Exception came........"+ ex.toString());
+	@RequestMapping(value = "/{name}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String detailedVenue(@PathVariable("name") String name , Model model) throws ParserConfigurationException, SAXException, IOException {
+		LinkedList<Event> Events = new LinkedList<Event>();
+		name = name.replaceAll("\\s", "_");
+ 		System.out.println("================Text parameters=============");
+ 		System.out.println(name);
+
+		
+		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(url.openStream());
+
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+
+		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("Result");
+
+		System.out.println("----------------------------");
+		System.out.println(nList.getLength());
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				Event event = new Event();
+				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
+				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
+			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+//                System.out.println("--------------event-----------------");
+//                System.out.println(event.getName());
+//                System.out.println(event.getDescription());
+                Events.add(event);
+			}
 		}
+		System.out.println("================Text content of subEvents===============");
+		System.out.println(Events.get(1).getName());
+		System.out.println(Events.get(2).getName());
+		System.out.println(Events.get(3).getName());
+		System.out.println(Events.get(4).getName());
+		System.out.println(Events.get(0).getName());
+				
+		model.addAttribute("subEvents", Events);
 		return "venues/detail";
 	}
 	
