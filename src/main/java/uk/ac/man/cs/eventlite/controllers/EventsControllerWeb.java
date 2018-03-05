@@ -136,9 +136,9 @@ public class EventsControllerWeb {
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) throws ParserConfigurationException, SAXException, IOException {
 		
-        NiceText niceText = new NTImpl();
-        String[] urls = new String[]{
-        		name,
+//        NiceText niceText = new NTImpl();
+//        String[] urls = new String[]{
+//        		name,
 //        		"https://en.wikipedia.org/wiki/Beijing",
 //                "http://www.scientificamerican.com/article/common-parasite-could-manipulate-our-behavior/",
 //                "http://www.npr.org/2015/03/27/395593337/twist-of-fate-an-accident-brings-beautiful-symmetry-to-two-lives",
@@ -167,29 +167,29 @@ public class EventsControllerWeb {
 //                "http://www.ndtv.com/diaspora/us-lawmaker-tulsi-gabbard-to-marry-in-april-in-vedic-ceremony-740759?pfrom=home-diaspora",
 //                "http://www.thehindu.com/news/cities/Delhi/kejriwal-seeks-services-of-sanjeev-chaturvedi/article6905600.ece?ref=topnavwidget&utm_source=topnavdd&utm_medium=topnavdropdownwidget&utm_campaign=topnavdropdown",
 //                "http://www.deccanherald.com/content/458482/karnataka-man-seen-cctv-footage.html",
-        };
-		Event event = new Event();
-        for (String url : urls) {
-            String[] t = niceText.extract(url).split("\n");
-            StringBuilder txtB = new StringBuilder();
-            for (String s : t) {
-                s = s.trim();
-                if (s.charAt(s.length() - 1) == '.') {
-                    txtB.append(s).append(" ");
-                } else {
-                    txtB.append(s).append(". ");
-                }
-            }
-            event.setDescription(txtB.toString());
-
-            System.out.println("==================================");
-        }
+//        };
+//		Event event = new Event();
+//        for (String url : urls) {
+//            String[] t = niceText.extract(url).split("\n");
+//            StringBuilder txtB = new StringBuilder();
+//            for (String s : t) {
+//                s = s.trim();
+//                if (s.charAt(s.length() - 1) == '.') {
+//                    txtB.append(s).append(" ");
+//                } else {
+//                    txtB.append(s).append(". ");
+//                }
+//            }
+//            event.setDescription(txtB.toString());
+//
+//            System.out.println("==================================");
+//        }
 		
 		
 		
 		//this is from keyword to results
-		LinkedList<Event> pastEvents = new LinkedList<Event>();
-		pastEvents.add(event);
+//		LinkedList<Event> pastEvents = new LinkedList<Event>();
+//		pastEvents.add(event);
 //		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
 //		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 //		DocumentBuilder db = dbf.newDocumentBuilder();
@@ -226,11 +226,11 @@ public class EventsControllerWeb {
 //                Events.add(event);
 //			}
 //		}
-
-		model.addAttribute("pastEvents", pastEvents);
-		
-		System.out.println("--------------event-----------------");
-        System.out.println(event.getDescription());
+//
+//		model.addAttribute("pastEvents", pastEvents);
+//		
+//		System.out.println("--------------event-----------------");
+//        System.out.println(event.getDescription());
 
 
 		return "events/index";

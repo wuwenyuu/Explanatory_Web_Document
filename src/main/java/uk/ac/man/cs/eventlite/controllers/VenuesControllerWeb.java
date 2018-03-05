@@ -63,7 +63,7 @@ public class VenuesControllerWeb {
 //		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		LinkedList<Event> Events = new LinkedList<Event>();
 		String string1 = "https://www.googleapis.com/customsearch/v1?q=";
-		String string2 = "&cx=012093427881739797142%3Agfemca_eksy&imgSize=large&searchType=image&key=AIzaSyDOyxGFXb4fcoeG0P5h4eMwGjWnSAFFIrQ";
+		String string2 = "&cx=012093427881739797142%3Agfemca_eksy&imgSize=medium&searchType=image&key=AIzaSyDOyxGFXb4fcoeG0P5h4eMwGjWnSAFFIrQ";
 		String jsonString = string1+name+string2;
 		
         URL website = new URL(jsonString);
