@@ -2,7 +2,7 @@
 <head>
 <style>
 body {
-  background: url("http://rozdeba.com/wp-content/uploads/2017/11/simplicity.png") ;
+  background: url("https://static.pexels.com/photos/235994/pexels-photo-235994.jpeg") ;
 
   background-size:1300px 700px;
 }
@@ -47,11 +47,12 @@ div.transbox {
 }
 .bottom3 {
     position: absolute;
-    left: 3%;
-    top: 180%;
+    left: 0%;
+    top: 230%;
     width: 100%;
     font-size: 18px;
 }
+
 
 div.transbox th,td {
   margin: 500%;
@@ -59,7 +60,9 @@ div.transbox th,td {
   color: #000000;
 }
 
-
+line {
+ display:inline;
+}
 
 nav  {
     border-style: solid;
@@ -97,7 +100,7 @@ article {
 
 
 
-{{#if pastEvents}}
+{{#if Event}}
 <div class="bottom1">
 <h2>Searching Results</h2>
 </div>
@@ -111,15 +114,39 @@ article {
     </tr>
   </thead>
   <tbody>
-    {{#pastEvents}}
+    {{#Event}}
     <tr>
       <td>{{description}}</td>
     </tr>
-    {{/pastEvents}}
+    {{/Event}}
   </tbody>
 </table>
 </div>
 </div>
+{{/if}}
+
+{{#if pastEvents}}
+
+<h2>You may want to know</h2>
+
+  <div class="bottom3">
+  <div class="transbox">
+<table class="table table-striped table-hover" align="center">
+  <thead>
+    <tr>
+      <th><i class="fa fa-bolt"></i> Keywords</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#pastEvents}}
+    <tr>
+      <td><a href="/events/{{name}}">{{name}}</a></td>
+    </tr>
+    {{/pastEvents}}
+  </tbody>
+</table>
+  </div>
+  </div>
 {{/if}}
 
 

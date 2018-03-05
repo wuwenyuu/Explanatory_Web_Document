@@ -2,7 +2,7 @@
 <head>
 <style>
 body {
-  background: url("http://rozdeba.com/wp-content/uploads/2017/11/simplicity.png") ;
+  background: url("https://static.pexels.com/photos/235994/pexels-photo-235994.jpeg") ;
 
   background-size:1300px 700px;
 }
@@ -83,7 +83,7 @@ article {
 </style>
 </head>
 <div class="container">
-  <h1><a href="/">Make Simple</a> </h1><h2> {{name}} - Details</h2>
+  <h1><a href="/">Make Simple</a> </h1><h2> {{name}} - TOP5 Categories</h2>
 <div class="bottom2">
   <div class="transbox">
 <table class="table table-striped table-hover">
@@ -96,7 +96,7 @@ article {
   <tbody>
     {{#subEvents}}
     <tr>
-      <td>{{name}}</td>
+      <td><a href="/venues/new/{{name}}">{{name}}</a></td>
       <td>{{description}}</td>
     </tr>
     {{/subEvents}}

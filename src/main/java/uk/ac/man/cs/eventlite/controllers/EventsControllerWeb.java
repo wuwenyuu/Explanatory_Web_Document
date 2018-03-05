@@ -1,11 +1,16 @@
 package uk.ac.man.cs.eventlite.controllers;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Time;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +19,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -137,62 +144,69 @@ public class EventsControllerWeb {
 	
 	@RequestMapping(value="/search", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String searchAnEvent(@RequestParam(value="searchEvent", required=false) String name, Model model) throws Exception {
+
+		//This is from link to text
+        NiceText niceText = new NTImpl();
+        String[] urls = new String[]{
+        		name,
+        };
+		Event event = new Event();
+        for (String url : urls) {
+            String[] t = niceText.extract(url).split("\n");
+            StringBuilder txtB = new StringBuilder();
+            for (String s : t) {
+                s = s.trim();
+                if (s.charAt(s.length() - 1) == '.') {
+                    txtB.append(s).append(" ");
+                } else {
+                    txtB.append(s).append(". ");
+                }
+            }
+            event.setDescription(txtB.toString());
+
+            System.out.println("==================================");
+        }
+		
 		LinkedList<Event> pastEvents = new LinkedList<Event>();
 		String serializedClassifier = "src/main/java/classifiers/english.all.3class.distsim.crf.ser.gz";
 		AbstractSequenceClassifier<CoreLabel> classifier = CRFClassifier.getClassifier(serializedClassifier);
-		System.out.println(classifier.classifyWithInlineXML(name));
-		String text = classifier.classifyWithInlineXML(name);
+		System.out.println(classifier.classifyWithInlineXML(event.getDescription()));
+		String text = classifier.classifyWithInlineXML(event.getDescription());
 		String pattern1 = "<PERSON>";
 		String pattern2 = "</PERSON>";
 		Pattern p1 = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
 		Matcher m1 = p1.matcher(text);
 		while (m1.find()) {
-			Event event = new Event();
+			Event event2 = new Event();
 		  System.out.println(m1.group(1));
-		  event.setDescription(m1.group(1));
-		  pastEvents.add(event);		  
+		  String newname = m1.group(1).replaceAll(" ", "_");
+		  event2.setName(newname);
+			     pastEvents.add(event2);	  
 		}
 		String pattern3 = "<LOCATION>";
 		String pattern4 = "</LOCATION>";
 		Pattern p2 = Pattern.compile(Pattern.quote(pattern3) + "(.*?)" + Pattern.quote(pattern4));
 		Matcher m2 = p2.matcher(text);
 		while (m2.find()) {
-			Event event = new Event();
+			Event event3 = new Event();
 		  System.out.println(m2.group(1));
-		  event.setDescription(m2.group(1));
-		  pastEvents.add(event);		  
+		  String newname1 = m2.group(1).replaceAll(" ", "_");
+		  event3.setName(newname1);
+			     pastEvents.add(event3);	  
 		}
-		model.addAttribute("pastEvents", pastEvents);
-		//This is from link to text
-//        NiceText niceText = new NTImpl();
-//        String[] urls = new String[]{
-//        		name,
-//        };
-//		Event event = new Event();
-//        for (String url : urls) {
-//            String[] t = niceText.extract(url).split("\n");
-//            StringBuilder txtB = new StringBuilder();
-//            for (String s : t) {
-//                s = s.trim();
-//                if (s.charAt(s.length() - 1) == '.') {
-//                    txtB.append(s).append(" ");
-//                } else {
-//                    txtB.append(s).append(". ");
-//                }
-//            }
-//            event.setDescription(txtB.toString());
-//
-//            System.out.println("==================================");
-//        }
-		
-		
-		
+		// add elements to al, including duplicates
+		Set<Event> hs = new HashSet<>();
+		hs.addAll(pastEvents);
+		pastEvents.clear();
+		pastEvents.addAll(hs);
+
 		//this is from keyword to results
 //		LinkedList<Event> pastEvents = new LinkedList<Event>();
 //		pastEvents.add(event);
 //
 //
-//		model.addAttribute("pastEvents", pastEvents);
+		model.addAttribute("pastEvents", pastEvents);
+		model.addAttribute("Event",event);
 //		
 //		System.out.println("--------------event-----------------");
 //        System.out.println(event.getDescription());
@@ -325,6 +339,53 @@ public class EventsControllerWeb {
 		model.addAttribute("subEvents", Events);
 
 		return "events/detail";
+	}
+ 	
+	@RequestMapping(value = "/new/{name}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String newdetailedVenue(@PathVariable("name") String name , Model model) throws ParserConfigurationException, SAXException, IOException {
+//		LinkedList<Event> futureEvents = new LinkedList<Event>();
+		String newname = name.replaceAll(" ", "_");
+		LinkedList<Event> Events = new LinkedList<Event>();
+		String string1 = "https://www.googleapis.com/customsearch/v1?q=";
+		String string2 = "&cx=012093427881739797142%3Agfemca_eksy&key=AIzaSyDOyxGFXb4fcoeG0P5h4eMwGjWnSAFFIrQ";
+		String jsonString = string1+newname+string2;
+		
+        URL website = new URL(jsonString);
+        URLConnection connection = website.openConnection();
+        BufferedReader in = new BufferedReader( new InputStreamReader(connection.getInputStream(),"UTF8"));
+
+        StringBuilder response = new StringBuilder();
+        String inputLine;
+
+        while ((inputLine = in.readLine()) != null) 
+            response.append(inputLine);
+
+        in.close();
+
+        String jsonContent = response.toString();
+        System.out.println("================This is content of json=================");
+        System.out.println(jsonContent);
+        
+        JSONObject root = new JSONObject(jsonContent);
+        JSONArray items = root.getJSONArray("items");
+		for(int i=0;i<10;i++) {
+			Event event = new Event();
+			JSONObject eachitem = items.getJSONObject(i);
+			String link = eachitem.getString("link");
+			String title = eachitem.getString("title");
+			String snippet = eachitem.getString("snippet");
+//			JSONObject image = eachitem.getJSONObject("image");
+//			String context = image.getString("contextLink");
+			event.setName(title);
+			event.setDescription(snippet);
+			event.setLink(link);
+			System.out.println("============This is title of image============");
+			System.out.println(event.getDescription());
+			System.out.println(event.getLink());
+			Events.add(event);
+		}
+		model.addAttribute("subEvents",Events);
+		return "events/detailnew";
 	}
 	
 }
