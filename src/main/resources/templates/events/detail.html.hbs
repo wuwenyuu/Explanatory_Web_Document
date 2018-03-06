@@ -1,42 +1,94 @@
 {{#partial "content"}}
-  <h1><a href="/">Eventlite</a> </h1><h2> {{event.name}} - Details</h2>
-
+<head>
+<style>
+body {
+  background: url("https://static.pexels.com/photos/235994/pexels-photo-235994.jpeg") ;
+  background-size:1300px 700px;
+}
+div.background2 {
+  background: url("https://blogmedia.evbstatic.com/wp-content/uploads/wpmulti/sites/3/2017/06/19152521/event-feedback.jpg") ;
+  background-size:1200px 200px;
+}
+div.transbox {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity: 0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+.button {
+    background-color: white;
+    color: black;
+    border: 2px solid #555555;
+}
+.center {
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+.bottom1 {
+    position: absolute;
+    left: 3%;
+    top:20%;
+    width: 100%;
+    font-size: 18px;
+}
+.bottom2 {
+    position: absolute;
+    left: 0;
+    top: 20%;
+    width: 100%;
+    text-align: center;
+    font-size: 18px;
+}
+.bottom3 {
+    position: absolute;
+    left: 80%;
+    top: 600%;
+    width: 100%;
+    font-size: 18px;
+}
+div.transbox th,td {
+  margin: 500%;
+  font-weight: bold;
+  color: #000000;
+}
+nav  {
+    border-style: solid;
+    padding: 1em;
+    overflow: hidden;
+}
+article {
+    border-style: solid;
+    padding: 1em;
+    overflow: hidden;
+}
+</style>
+</head>
+<div class="container">
+  <h1><a href="/">Make Simple</a> </h1><h2> {{name}} - TOP5 Results</h2>
+<div class="bottom2">
 <table class="table table-striped table-hover">
+  <thead>
     <tr>
-      <th>Id</th>
-      <th>{{event.id}}</th>
+      <th><i class="fa fa-bolt"></i> Results</th>
+      <th><i class="fa fa-map-marker"></i> Description</th>
+
     </tr>
-    
+  </thead>
+  <tbody>
+    {{#Events}}
     <tr>
-      <th>Name</th>
-      <th>{{event.name}}</th>
+      <td><img src={{link}} width="300" height="300"></img></td>
+      <td><a href={{ref}}>{{name}}</a></td>
     </tr>
-    
-    <tr>
-      <th>Date</th>
-      <th>{{event.date}}</th>
-    </tr>
-    
-    <tr>
-      <th>Venue</th>
-      <th>{{event.venue.name}}</th>
-    </tr>
-    
-    <tr>
-      <th>Description</th>
-      <th>{{event.description}}</th>
-    </tr>
-    
-    <tr>
-    	<th>
-    	<a class="btn btn-primary" role="button" href="/events">Back</a> 
-    	</th>
-    	<th>
-    		<form action="/events/{{id}}/delete" method="post"><button type="submit" class="btn btn-danger">Delete</button></form>
-    	</th>
-    </tr>
-    
+    {{/Events}}
+  </tbody>
 </table>
+</div>
 
    {{#if tweets}}
      <div class="alert alert-success">
@@ -44,39 +96,8 @@
      </div>
    {{/if}}
   
-  <form action="/events/twitter" method="get" >
-	<div class="input-group">
-	 <input type="hidden" class="form-control" name="eventId" placeholder="{{id}}" value="{{id}}"/>
-	  <input type="text" class="form-control" name="tweet" placeholder="Tweet about this event ... "/>
-	  <div class="input-group-btn">
-	  <button type="submit" class="btn btn-default"><i class="fa fa-twitter" aria-hidden="true"></i></button>
-	  </div>
-	  </div>
-  </form>
-  <br>
-    <div id="map" style="width: 100%; height: 700px;"></div>
-    <script>
-
-      var initMap = function () {
-	      var map = new google.maps.Map(document.getElementById('map'), {
-	        zoom: 14,
-	        center: {lat: 53.480726, lng: -2.2426739}
-	      });
-	      
-	      var marker = new google.maps.Marker({
-	        map: map,
-	        position: {lat: {{event.venue.lat}}, lng: {{event.venue.lon}} },
-	        title: "{{event.name}}"
-	      });
-      }
-
-    </script>
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js">
-    </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAeo_GPzufbodkG6TI6Dd77YmbEKzbznoY&callback=initMap">
-    </script>
-		
+  
+	</div>	
 {{/partial}}
 
 {{> layouts/base title="Detailed Information"}}
