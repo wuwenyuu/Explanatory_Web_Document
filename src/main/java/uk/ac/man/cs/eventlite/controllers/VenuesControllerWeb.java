@@ -3,7 +3,9 @@ package uk.ac.man.cs.eventlite.controllers;
 
 import java.util.ArrayList;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -22,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionFailedException;
 import org.springframework.http.MediaType;
@@ -95,6 +98,17 @@ public class VenuesControllerWeb {
 		  event.setName(newname1);
 		  pastEvents.add(event);		  
 		}
+		String pattern5 = "<ORGANIZATION>";
+		String pattern6 = "</ORGANIZATION>";
+		Pattern p3 = Pattern.compile(Pattern.quote(pattern5) + "(.*?)" + Pattern.quote(pattern6));
+		Matcher m3 = p3.matcher(text);
+		while (m3.find()) {
+			Event event = new Event();
+		  System.out.println(m3.group(1));
+		  String newname1 = m3.group(1).replaceAll(" ", "_");
+		  event.setName(newname1);
+		  pastEvents.add(event);		  
+		}
 		model.addAttribute("Events", pastEvents);
 		model.addAttribute("Content",content);
 		
@@ -150,62 +164,37 @@ public class VenuesControllerWeb {
 	public String detailedVenue(@PathVariable("name") String name , Model model) throws ParserConfigurationException, SAXException, IOException {
 		LinkedList<Event> Events = new LinkedList<Event>();
 		name = name.replaceAll("\\s", "_");
- 		System.out.println("================Text parameters=============");
- 		System.out.println(name);
-
-		
-		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(url.openStream());
-
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		doc.getDocumentElement().normalize();
-
-//		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-		NodeList nList = doc.getElementsByTagName("Result");
-
-		System.out.println("----------------------------");
-		System.out.println(nList.getLength());
-
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-
-			Node nNode = nList.item(temp);
-
-			System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-				Element eElement = (Element) nNode;
-
-				Event event = new Event();
-				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
-				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
-				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
-			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
-			    if(temp==0) {
-			    	event.setKey(event.getName());
-			    }else {
-			    	   event.setKey(Events.getFirst().getName());
-			    }
-                System.out.println("--------------event-----------------");
-                System.out.println(event.getName());
-                System.out.println(event.getDescription());
-                Events.add(event);
-			}
+		String url1 = "http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select+%3Fcategory+where+%7B+%0D%0A++%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F";
+        String url2 = "%3E+dct%3Asubject+%3Fcategory%0D%0A%7D&format=text%2Fhtml&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+";
+		String urlstring = url1+name+url2;
+		URL url = new URL(urlstring);
+		URLConnection con = url.openConnection();
+		InputStream in = con.getInputStream();
+		String encoding = con.getContentEncoding();  // ** WRONG: should use "con.getContentType()" instead but it returns something like "text/html; charset=UTF-8" so this value must be parsed to extract the actual encoding
+		encoding = encoding == null ? "UTF-8" : encoding;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buf = new byte[8192];
+		int len = 0;
+		while ((len = in.read(buf)) != -1) {
+		    baos.write(buf, 0, len);
 		}
-		System.out.println("================Text content of subEvents===============");
-		System.out.println(Events.get(1).getName());
-		System.out.println(Events.get(2).getName());
-		System.out.println(Events.get(3).getName());
-		System.out.println(Events.get(4).getName());
-		System.out.println(Events.get(0).getName());
-		
-		Event event1 = new Event();
-		event1.setKey(Events.getFirst().getName());
-		model.addAttribute("Key", event1);
+		String body = new String(baos.toByteArray(), encoding);
+		System.out.println("=============body==============");
+		System.out.println(body);
+		String pattern1 = "<td><a href=\"http://dbpedia.org/resource/Category:";
+		String pattern2 = "\">http://dbpedia.org/resource/Category:";
+		Pattern p1 = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
+		Matcher m1 = p1.matcher(body);
+		int count=0;
+		while (m1.find()) {
+			Event event = new Event();
+			System.out.println("=========test categories===========");
+		  System.out.println(m1.group(1));
+		  count = count+1;
+		  event.setName(m1.group(1));
+		  event.setKey(name);
+		  Events.add(event);
+			}
 		
 		model.addAttribute("subEvents", Events);
 		return "venues/detail";
@@ -216,70 +205,59 @@ public class VenuesControllerWeb {
 	@RequestMapping(value = "/{name}/{key}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
 	public String newdetailedVenue(@PathVariable("name") String name ,@PathVariable("key") String ref , Model model) throws ParserConfigurationException, SAXException, IOException {
 
-		LinkedList<Event> Events1 = new LinkedList<Event>();
+		LinkedList<Event> Events = new LinkedList<Event>();
 		ref = ref.replaceAll("\\s", "_");
- 		System.out.println("================Text parameters=============");
- 		System.out.println(ref);
-
-		
-		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+ref);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = dbf.newDocumentBuilder();
-		Document doc = db.parse(url.openStream());
-
-		//optional, but recommended
-		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-		doc.getDocumentElement().normalize();
-
-//		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-
-		NodeList nList = doc.getElementsByTagName("Result");
-
-		System.out.println("----------------------------");
-		System.out.println(nList.getLength());
-
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-
-			Node nNode = nList.item(temp);
-
-			System.out.println("\nCurrent Element :" + nNode.getNodeName());
-
-			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-
-				Element eElement = (Element) nNode;
-
-				Event event = new Event();
-				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
-				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
-				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
-			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
-			    event.setKey(ref);
-                System.out.println("--------------event-----------------");
-                System.out.println(event.getName());
-                System.out.println(event.getDescription());
-                Events1.add(event);
-			}
+		String url1 = "http://dbpedia.org/sparql/?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=select+%3Fcategory+where+%7B+%0D%0A++%3Chttp%3A%2F%2Fdbpedia.org%2Fresource%2F";
+        String url2 = "%3E+dct%3Asubject+%3Fcategory%0D%0A%7D&format=text%2Fhtml&CXML_redir_for_subjs=121&CXML_redir_for_hrefs=&timeout=30000&debug=on&run=+Run+Query+";
+		String urlstring = url1+ref+url2;
+		URL url = new URL(urlstring);
+		URLConnection con = url.openConnection();
+		InputStream in = con.getInputStream();
+		String encoding = con.getContentEncoding();  // ** WRONG: should use "con.getContentType()" instead but it returns something like "text/html; charset=UTF-8" so this value must be parsed to extract the actual encoding
+		encoding = encoding == null ? "UTF-8" : encoding;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		byte[] buf = new byte[8192];
+		int len = 0;
+		while ((len = in.read(buf)) != -1) {
+		    baos.write(buf, 0, len);
 		}
+		String body = new String(baos.toByteArray(), encoding);
+		System.out.println("=============body==============");
+		System.out.println(body);
+		String pattern1 = "<td><a href=\"http://dbpedia.org/resource/Category:";
+		String pattern2 = "\">http://dbpedia.org/resource/Category:";
+		Pattern p1 = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
+		Matcher m1 = p1.matcher(body);
+		int count=0;
+		while (m1.find()) {
+			Event event = new Event();
+			System.out.println("=========test categories===========");
+		  System.out.println(m1.group(1));
+		  count = count+1;
+		  event.setName(m1.group(1));
+		  event.setKey(ref);
+		  Events.add(event);
+			}
 		
 		
 		//		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		String newname = name.replaceAll(" ", "_");
-		LinkedList<Event> Events = new LinkedList<Event>();
+		LinkedList<Event> subEvents = new LinkedList<Event>();
 		String string1 = "https://www.googleapis.com/customsearch/v1?q=";
 		String string2 = "&cx=012093427881739797142%3Agfemca_eksy&key=AIzaSyDOyxGFXb4fcoeG0P5h4eMwGjWnSAFFIrQ";
-		String jsonString = string1+newname+string2;
+		String jsonString = string1+ref+"/"+newname+string2;
 		
         URL website = new URL(jsonString);
         URLConnection connection = website.openConnection();
-        BufferedReader in = new BufferedReader( new InputStreamReader(connection.getInputStream(),"UTF8"));
+        BufferedReader in1 = new BufferedReader( new InputStreamReader(connection.getInputStream(),"UTF8"));
 
         StringBuilder response = new StringBuilder();
         String inputLine;
 
-        while ((inputLine = in.readLine()) != null) 
+        while ((inputLine = in1.readLine()) != null) 
             response.append(inputLine);
 
-        in.close();
+        in1.close();
 
         String jsonContent = response.toString();
         System.out.println("================This is content of json=================");
@@ -287,7 +265,7 @@ public class VenuesControllerWeb {
         
         JSONObject root = new JSONObject(jsonContent);
         JSONArray items = root.getJSONArray("items");
-		for(int i=0;i<10;i++) {
+		for(int i=0;i<items.length();i++) {
 			Event event = new Event();
 			JSONObject eachitem = items.getJSONObject(i);
 			String link = eachitem.getString("link");
@@ -301,11 +279,11 @@ public class VenuesControllerWeb {
 			System.out.println("============This is title of image============");
 			System.out.println(event.getDescription());
 			System.out.println(event.getLink());
-			Events.add(event);
+			subEvents.add(event);
 		}
         
-		model.addAttribute("subEvents", Events1);
-		model.addAttribute("Events",Events);
+		model.addAttribute("subEvents", Events);
+		model.addAttribute("Events",subEvents);
 		return "venues/detailnew";
 	}
 	
