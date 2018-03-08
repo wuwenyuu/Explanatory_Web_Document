@@ -18,9 +18,20 @@ div.transbox {
   margin: 30px;
   background-color: #ffffff;
   border: 1px solid black;
-  opacity: 0.6;
+      background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
+    background: rgba(204, 204, 204, 0.5);
   filter: alpha(opacity=60); /* For IE8 and earlier */
 }
+
+div.transbox2 {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity:0.6;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+
+
 .center {
     position: absolute;
     left: 0;
@@ -91,7 +102,7 @@ article {
 <h2> Text</h2>
  <form action="/venues/search" method="get" >
 <div class="input-group">
-  <input type="text" class="form-control" name="searchVenue" placeholder="Search for a venue ..."/>
+  <input type="text" class="form-control" name="searchVenue" placeholder="Input text you are trying to understand..."/>
   <div class="input-group-btn">
   <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
   </div>
@@ -103,6 +114,7 @@ article {
 <h2>Content</h2>
 </div>
 <div class="bottom2">
+<div class="transbox2">
 <table class="table table-striped table-hover">
   <tbody>
     {{#Content}}
@@ -112,6 +124,7 @@ article {
     {{/Content}}
   </tbody>
 </table>
+</div>
 </div>
 {{/if}}
 

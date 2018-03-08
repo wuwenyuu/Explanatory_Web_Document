@@ -185,6 +185,11 @@ public class VenuesControllerWeb {
 				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
 				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
 			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+			    if(temp==0) {
+			    	event.setKey(event.getName());
+			    }else {
+			    	   event.setKey(Events.getFirst().getName());
+			    }
                 System.out.println("--------------event-----------------");
                 System.out.println(event.getName());
                 System.out.println(event.getDescription());
@@ -197,14 +202,67 @@ public class VenuesControllerWeb {
 		System.out.println(Events.get(3).getName());
 		System.out.println(Events.get(4).getName());
 		System.out.println(Events.get(0).getName());
-				
+		
+		Event event1 = new Event();
+		event1.setKey(Events.getFirst().getName());
+		model.addAttribute("Key", event1);
+		
 		model.addAttribute("subEvents", Events);
 		return "venues/detail";
 	}
 	
-	@RequestMapping(value = "/new/{name}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
-	public String newdetailedVenue(@PathVariable("name") String name , Model model) throws ParserConfigurationException, SAXException, IOException {
-//		LinkedList<Event> futureEvents = new LinkedList<Event>();
+	
+	
+	@RequestMapping(value = "/{name}/{key}", method = RequestMethod.GET, produces = { MediaType.TEXT_HTML_VALUE })
+	public String newdetailedVenue(@PathVariable("name") String name ,@PathVariable("key") String ref , Model model) throws ParserConfigurationException, SAXException, IOException {
+
+		LinkedList<Event> Events1 = new LinkedList<Event>();
+		ref = ref.replaceAll("\\s", "_");
+ 		System.out.println("================Text parameters=============");
+ 		System.out.println(ref);
+
+		
+		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+ref);
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db = dbf.newDocumentBuilder();
+		Document doc = db.parse(url.openStream());
+
+		//optional, but recommended
+		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
+		doc.getDocumentElement().normalize();
+
+//		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
+
+		NodeList nList = doc.getElementsByTagName("Result");
+
+		System.out.println("----------------------------");
+		System.out.println(nList.getLength());
+
+		for (int temp = 0; temp < nList.getLength(); temp++) {
+
+			Node nNode = nList.item(temp);
+
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+
+			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+
+				Element eElement = (Element) nNode;
+
+				Event event = new Event();
+				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
+				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
+				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
+			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
+			    event.setKey(ref);
+                System.out.println("--------------event-----------------");
+                System.out.println(event.getName());
+                System.out.println(event.getDescription());
+                Events1.add(event);
+			}
+		}
+		
+		
+		//		LinkedList<Event> futureEvents = new LinkedList<Event>();
 		String newname = name.replaceAll(" ", "_");
 		LinkedList<Event> Events = new LinkedList<Event>();
 		String string1 = "https://www.googleapis.com/customsearch/v1?q=";
@@ -245,7 +303,9 @@ public class VenuesControllerWeb {
 			System.out.println(event.getLink());
 			Events.add(event);
 		}
-		model.addAttribute("subEvents",Events);
+        
+		model.addAttribute("subEvents", Events1);
+		model.addAttribute("Events",Events);
 		return "venues/detailnew";
 	}
 	

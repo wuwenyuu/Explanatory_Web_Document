@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -195,11 +196,38 @@ public class EventsControllerWeb {
 			     pastEvents.add(event3);	  
 		}
 		// add elements to al, including duplicates
-		Set<Event> hs = new HashSet<>();
-		hs.addAll(pastEvents);
-		pastEvents.clear();
-		pastEvents.addAll(hs);
+//		Set<Event> hs = new HashSet<>();
+//		hs.addAll(pastEvents);
+//		pastEvents.clear();
+//		pastEvents.addAll(hs);
 
+System.out.println("========before removal========");
+System.out.println(pastEvents.size());
+LinkedList<Event> current = new LinkedList<Event>();
+
+
+		        for(int i=0;i<pastEvents.size();i++)
+		        {
+		        Event eventcurrent = pastEvents.get(i);
+		              if(eventcurrent!=null) {
+		                      if(current.contains(eventcurrent)){
+		                    	      System.out.println("=========test removal=======");
+		                          pastEvents.remove(i);
+		                          --i;
+		                      }else{
+		                            current.add(eventcurrent);
+		                            for(int j=0;j<current.size();j++)
+		                            if(eventcurrent.getName()==current.get(j).getName()) {
+		                            	pastEvents.remove(i);
+		                            }
+		                            System.out.println("=======test add=======");
+		                            System.out.println(eventcurrent.getName());
+		                            System.out.println(current.getFirst().getName());
+		                      }
+		              }
+		        }
+		System.out.println("=============after removal===========");
+		System.out.println(pastEvents.size());
 		//this is from keyword to results
 //		LinkedList<Event> pastEvents = new LinkedList<Event>();
 //		pastEvents.add(event);

@@ -18,7 +18,8 @@ div.transbox {
   margin: 30px;
   background-color: #ffffff;
   border: 1px solid black;
-  opacity: 0.6;
+      background: rgb(204, 204, 204); /* Fallback for older browsers without RGBA-support */
+    background: rgba(204, 204, 204, 0.5);
   filter: alpha(opacity=60); /* For IE8 and earlier */
 }
 .center {
@@ -86,10 +87,10 @@ article {
    <h1><a href="/">Make Simple</a> </h1>
 <div class="center">
 <div class="transbox">
-<h2> Text</h2>
+<h2> Link</h2>
   <form action="/events/search" method="get" >
 <div class="input-group">
-  <input type="text" class="form-control" name="searchEvent" placeholder="Type text here"/>
+  <input type="text" class="form-control" name="searchEvent" placeholder="Input page link you are trying to understand..."/>
   <div class="input-group-btn">
   <button type="submit" class="btn btn-default"><i class="glyphicon glyphicon-search"></i></button>
   </div>
@@ -116,7 +117,7 @@ article {
   <tbody>
     {{#Event}}
     <tr>
-      <td>{{description}}</td>
+      <td align="left">{{description}}</td>
     </tr>
     {{/Event}}
   </tbody>

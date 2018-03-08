@@ -13,12 +13,18 @@ div.background2 {
 
 }
 
+.navbar {
+    display:table;
+    li{
+        display:table-cell;
+    }
+}
 
 div.transbox {
   margin: 30px;
   background-color: #ffffff;
   border: 1px solid black;
-  opacity: 0.6;
+  opacity:0.6;
   filter: alpha(opacity=60); /* For IE8 and earlier */
 }
 
@@ -60,13 +66,22 @@ div.transbox {
     font-size: 18px;
 }
 
+table {
+    border-collapse: collapse;
+}
+
+table, td, th {
+    border: 1px solid black;
+}
+
 div.transbox th,td {
   margin: 500%;
   font-weight: bold;
   color: #000000;
 }
 
-
+.floatLeft { width: 30%; float: left; }
+.floatRight {width: 70.1%; float: right; }
 
 nav  {
     border-style: solid;
@@ -86,25 +101,49 @@ article {
   <h1><a href="/">Make Simple</a> </h1><h2> {{name}} - TOP5 Categories</h2>
 <div class="bottom2">
   <div class="transbox">
-<table class="table table-striped table-hover">
+<table class="table table-striped table-hover" bgcolor="#000000">
   <thead>
     <tr>
-      <th><i class="fa fa-bolt"></i> results</th>
-      <th><i class="fa fa-map-marker"></i> Description</th>
+      <th>Categories</th>
     </tr>
   </thead>
   <tbody>
     {{#subEvents}}
     <tr>
-      <td><a href="/venues/new/{{name}}">{{name}}</a></td>
-      <td>{{description}}</td>
+      <td><a href="/venues/{{name}}/{{key}}">{{name}}</a></td>
     </tr>
     {{/subEvents}}
   </tbody>
 </table>
-      <a class="button" role="button" href="/venues">Back</a>
 </div>
 </div>
+
+
+
+{{#Events}}
+<div class="bottom2">
+  <div class="transbox">
+  <div class="floatRight">
+<table >
+  <thead>
+    <tr>
+      <th> results</th>
+      <th> Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#Events}}
+    <tr>
+      <td><a href={{link}}>{{name}}</a></td>
+      <td>{{description}}</td>
+    </tr>
+    {{/Events}}
+  </tbody>
+</table>
+</div>
+</div>
+</div>
+{{/Events}}
 
  </div>
 

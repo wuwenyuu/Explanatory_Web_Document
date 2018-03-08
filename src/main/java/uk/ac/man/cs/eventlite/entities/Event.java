@@ -39,6 +39,9 @@ public class Event {
 	private String ref;
 	private String link;
 	private String description;
+	private String key;
+	
+
 	
 	@ManyToOne
 	@JoinColumn
@@ -78,9 +81,17 @@ public class Event {
 	public String getName() {
 		return name;
 	}
+	
+	public String getKey() {
+		return key;
+	}
 
 	public void setName(String name) {
 		this.name = name;
+	}
+	
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	public Venue getVenue() {
