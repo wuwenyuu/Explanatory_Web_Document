@@ -112,50 +112,7 @@ public class VenuesControllerWeb {
 		model.addAttribute("Events", pastEvents);
 		model.addAttribute("Content",content);
 		
-		//This is from keyword search to result version 1
-//		System.out.println("Keyword:"+name);
-////		LinkedList<Event> futureEvents = new LinkedList<Event>();
-//		LinkedList<Event> Events = new LinkedList<Event>();
-//		
-//		URL url = new URL("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryClass=place&QueryString="+name);
-//		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-//		DocumentBuilder db = dbf.newDocumentBuilder();
-//		Document doc = db.parse(url.openStream());
-//
-//		//optional, but recommended
-//		//read this - http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
-//		doc.getDocumentElement().normalize();
-//
-//		System.out.println("Root element :" + doc.getDocumentElement().getNodeName());
-//
-//		NodeList nList = doc.getElementsByTagName("Result");
-//
-//		System.out.println("----------------------------");
-//		System.out.println(nList.getLength());
-//
-//		for (int temp = 0; temp < nList.getLength(); temp++) {
-//
-//			Node nNode = nList.item(temp);
-//
-//			System.out.println("\nCurrent Element :" + nNode.getNodeName());
-//
-//			if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-//
-//				Element eElement = (Element) nNode;
-//
-//				Event event = new Event();
-//				event.setName(eElement.getElementsByTagName("Label").item(0).getTextContent());
-//				event.setDescription(eElement.getElementsByTagName("Description").item(0).getTextContent());
-//				event.setLink(eElement.getElementsByTagName("URI").item(0).getTextContent());
-//			    event.setRef(eElement.getElementsByTagName("Refcount").item(0).getTextContent());
-//                System.out.println("--------------event-----------------");
-//                System.out.println(event.getName());
-//                System.out.println(event.getDescription());
-//                Events.add(event);
-//			}
-//		}
-				
-//		model.addAttribute("Events", Events);
+
 
 		return "venues/index";
 	}	
@@ -228,6 +185,17 @@ public class VenuesControllerWeb {
 		String pattern2 = "\">http://dbpedia.org/resource/Category:";
 		Pattern p1 = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
 		Matcher m1 = p1.matcher(body);
+		String pattern3 = "<td><a href=\"http://dbpedia.org/resource/lat:";
+		String pattern4 = "\">http://dbpedia.org/resource/lat:";
+		Pattern p2 = Pattern.compile(Pattern.quote(pattern3) + "(.*?)" + Pattern.quote(pattern4));
+		Matcher m2 = p2.matcher(body);
+		double lat = Double.parseDouble(m2.group(1));
+		String pattern5 = "<td><a href=\"http://dbpedia.org/resource/long:";
+		String pattern6 = "\">http://dbpedia.org/resource/long:";
+		Pattern p3 = Pattern.compile(Pattern.quote(pattern5) + "(.*?)" + Pattern.quote(pattern6));
+		Matcher m3 = p3.matcher(body);
+		double lon = Double.parseDouble(m3.group(1));
+		
 		int count=0;
 		while (m1.find()) {
 			Event event = new Event();
@@ -236,6 +204,7 @@ public class VenuesControllerWeb {
 		  count = count+1;
 		  event.setName(m1.group(1));
 		  event.setKey(ref);
+		  event.setLatLon(lat, lon);
 		  Events.add(event);
 			}
 		
